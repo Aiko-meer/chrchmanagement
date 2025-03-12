@@ -245,4 +245,13 @@ public function month($year)
 
     ));
     }
+
+    public function retrieve($year)
+    {
+        // Update all records where the baptism_date is in the given year
+        Funeral_folder::where('year', $year)
+                      ->update(['archive' => 0]);
+    
+        return redirect()->back()->with('success', "All Funeral records for $year have been retrieved.");
+    }
 }

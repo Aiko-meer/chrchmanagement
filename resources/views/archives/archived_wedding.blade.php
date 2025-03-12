@@ -39,16 +39,10 @@
                                                 >
                                                     <i class="fa fa-edit"></i>
                                                 </button>
-                                                <button
-                                                    type="button"
-                                                    data-bs-toggle="tooltip"
-                                                    title="Move to Archive"
-                                                    class="btn btn-link btn-danger"
-                                                    data-original-title="Remove"
-                                                    onclick="window.location.href='/weddingfolder/archive/'"
-                                                >
-                                                    <i class="fas fa-archive"></i>
-                                                </button>
+                                                <button type="button" data-bs-toggle="tooltip" class="btn btn-link btn-secondary btn-lg" title="Retrieve"
+                                                onclick="confirmRetrieveFolderwedding({{ $wedding['year'] }})">
+                                            <i class="fas fa-undo"></i>
+                                            </button>
                                             </div>
                                         </td>
                                     </tr>
@@ -91,18 +85,14 @@
                                       <td>{{ \Carbon\Carbon::parse($record->wedding_date)->format('m/d/Y') }}</td>
                                       <td>
                                           <div class="form-button-action">
-                                          <a href="" type="button" data-bs-toggle="tooltip" title="View Baptism Record" class="btn btn-link btn-primary btn-lg">
-                                            <i class="fas fa-eye"></i>
-                                        </a>
-                                              <button type="button" data-bs-toggle="tooltip" title="Edit Baptism Record"
-                                                  class="btn btn-link btn-primary btn-lg"
-                                                  onclick="">
-                                                  <i class="fa fa-edit"></i>
-                                              </button>
-                                              <button type="button" data-bs-toggle="tooltip" title="Remove"
-                                                  class="btn btn-link btn-danger" onclick="window.location.href='/weddingrecord/archive/{{ $record->id }}'">
-                                                  <i class="fas fa-archive"></i>
-                                              </button>
+                                            <div class="form-button-action">
+                                                <a href="{{ route('wedding.info', $record->id) }}" type="button" data-bs-toggle="tooltip" title="View Wedding Record" class="btn btn-link btn-primary btn-lg">
+                                                  <i class="fas fa-eye"></i>
+                                              </a>
+                                              <button type="button" data-bs-toggle="tooltip" class="btn btn-link btn-secondary btn-lg" title="Retrieve"
+                                              onclick="confirmRetrieveRecordwedding({{ $record['id'] }})">
+                                          <i class="fas fa-undo"></i>
+                                          </button>
                                           </div>
                                       </td>
                                   </tr>
@@ -112,4 +102,35 @@
                           </table>
                       </div>
                         </div>
-                        
+                        <script>
+                            function confirmRetrieveFolderwedding(year) {
+                                Swal.fire({
+                                    title: 'Are you sure?',
+                                    text: "Do you want to retrieve this Wedding Folder?",
+                                    icon: 'question',
+                                    showCancelButton: true,
+                                    confirmButtonText: 'Yes, retrieve it!',
+                                    cancelButtonText: 'No, cancel',
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        // Redirect to the retrieval route
+                                        window.location.href = '/weddingrecord/archive/retrieve/' + year;
+                                    }
+                                });
+                            }
+                            function confirmRetrieveRecordwedding(id) {
+                                Swal.fire({
+                                    title: 'Are you sure?',
+                                    text: "Do you want to retrieve this Wedding record?",
+                                    icon: 'question',
+                                    showCancelButton: true,
+                                    confirmButtonText: 'Yes, retrieve it!',
+                                    cancelButtonText: 'No, cancel',
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        // Redirect to the retrieval route
+                                        window.location.href = '/weddingrecord/archive/retrieverecord/' + id;
+                                    }
+                                });
+                            }
+                        </script>

@@ -179,6 +179,13 @@
                         <p>Dashboard</p>
                     </a>
                 </li>
+                <li class="nav-item {{ Request::is('managebook') ? 'active' : '' }}">
+                  <a href="/managebook">
+                    <i class="fas fa-archive"></i>
+                    <p>Manage book</p>
+                    
+                  </a>
+                </li>
                 <li class="nav-section">
                     <span class="sidebar-mini-icon">
                         <i class="fa fa-ellipsis-h"></i>

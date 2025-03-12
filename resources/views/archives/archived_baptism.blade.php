@@ -21,10 +21,11 @@
                                     onclick="window.location.href='/baptism_archive/month/{{ $baptism['year'] }}'">
                                     <i class="fa fa-edit"></i>
                                 </button>
-                                <button type="button" class="btn btn-link btn-danger" title="Move to Archive"
-                                    onclick="window.location.href='/baptism_archive/{{ $baptism['year'] }}'">
-                                    <i class="fas fa-archive"></i>
+                                <button type="button" data-bs-toggle="tooltip" class="btn btn-link btn-secondary btn-lg" title="Retrieve"
+                                        onclick="confirmRetrievefolder({{ $baptism['year'] }})">
+                                    <i class="fas fa-undo"></i>
                                 </button>
+                                
                             </div>
                         </td>
                     </tr>
@@ -33,6 +34,58 @@
         </table>
     </div>
 </div>
+<!--js script-->
+<script>
+    function confirmRetrievefolder(baptismId) {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "Do you want to retrieve this baptism record?",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, retrieve it!',
+            cancelButtonText: 'No, cancel',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Redirect to the retrieval route
+                window.location.href = '/baptism_retrieve/' + baptismId;
+            }
+        });
+    }
+</script>
+<script>
+    function confirmRetrieveRecord(bookId) {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "Do you want to retrieve this Baptism record?",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, retrieve it!',
+            cancelButtonText: 'No, cancel',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Redirect to the retrieval route
+                window.location.href = '/bookrecord_retrieve/' + bookId;
+            }
+        });
+    }
+</script>
+<script>
+    function confirmRetrieveBookRecord(bookIds) {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "Do you want to retrieve this Baptism record?",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, retrieve it!',
+            cancelButtonText: 'No, cancel',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Redirect to the retrieval route
+                window.location.href = '/book_archived/retrieve/' + bookIds;
+            }
+        });
+    }
+</script>
 <div class="separator" style="border-top: 2px solid #ddd; margin: 20px 0;"></div>
 <div class="card-body">
 <h3 class="card-title">Batism Books Records</h3>
@@ -60,9 +113,9 @@
                                     onclick="window.location.href='/book_record_archived/{{ $book['id'] }}'">
                                     <i class="fa fa-edit"></i>
                                 </button>
-                                <button type="button" class="btn btn-link btn-danger" title="Move to Archive"
-                                    onclick="window.location.href='{{ route('bookfolder.archive', $book['id']) }}'">
-                                    <i class="fas fa-archive"></i>
+                                <button type="button" data-bs-toggle="tooltip" class="btn btn-link btn-secondary btn-lg" title="Retrieve"
+                                onclick="confirmRetrieveBookRecord({{ $book['id'] }})">
+                                 <i class="fas fa-undo"></i>
                                 </button>
                             </div>
                         </td>
@@ -102,10 +155,10 @@
                                     onclick="editBaptismRecord({{ json_encode($record) }})">
                                     <i class="fa fa-edit"></i>
                                 </button>
-                                <button type="button" class="btn btn-link btn-danger" title="Move to Archive"
-                                    onclick="window.location.href='/bookrecord/archive/{{ $record->id }}'">
-                                    <i class="fas fa-archive"></i>
-                                </button>
+                                <button type="button" data-bs-toggle="tooltip" class="btn btn-link btn-secondary btn-lg" title="Retrieve"
+                                onclick="confirmRetrieveRecord({{ $record['id'] }})">
+                            <i class="fas fa-undo"></i>
+                        </button>
                             </div>
                         </td>
                     </tr>

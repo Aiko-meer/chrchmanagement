@@ -251,4 +251,13 @@ class BaptismFolderController extends Controller
     ));
     }
 
+    public function retrieve($year)
+{
+    // Update all records where the baptism_date is in the given year
+    Baptism_folder::where('year', $year)
+                  ->update(['archive' => 0]);
+
+    return redirect()->back()->with('success', "All baptism records for $year have been retrieved.");
+}
+
 }

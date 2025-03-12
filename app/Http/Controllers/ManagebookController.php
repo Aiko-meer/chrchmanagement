@@ -16,9 +16,11 @@ use App\Models\WeddingRecord;
 use App\Models\Funeral_folder;
 use App\Models\FuneralRecord;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
-class ArchiveController extends Controller
+class ManagebookController extends Controller
 {
+    //
     public function index()
     {
         
@@ -31,12 +33,12 @@ class ArchiveController extends Controller
 
 
             $baptisms = Baptism_folder::where('archive', 1)->with('bookFolders')->get();
-            
+
             $baptismWithBookCounts = $baptisms->groupBy('year')->map(function ($baptismsByYear, $year) {
                 $totalBookCount = $baptismsByYear->sum(fn($baptism) => $baptism->bookFolders->count());
             
                 return [
-                  
+                    'id' => $baptismsByYear->pluck('id')->toArray(), // Get unique IDs
                     'year' => $year,
                     'book_count' => $totalBookCount,
                 ];
@@ -58,7 +60,7 @@ $groupedConfirmationCounts = $years->groupBy('year')->map(function ($confirmatio
 })->values(); // Reset array keys
 
         
-        $books = BookFolder::where('archive', 1)
+        $books = BookFolder::where('archive', 0 )
              // Use the IDs from the baptism_folder
             ->get();
 
@@ -77,9 +79,13 @@ $groupedConfirmationCounts = $years->groupBy('year')->map(function ($confirmatio
             ];
         });
 
-        $bookRecords = BookRecord::where('archive', 1)
-      // Use the IDs from the bookfolder
+        $today = Carbon::today()->format('y-m-d');
+        $bookRecords = BookRecord::whereDate('baptism_date', $today)
+        ->where('archive', 0)
         ->get();
+
+       
+    
         //confirmation
         
         $years = ConfirmationFolder::where('archive', 1)->get();
@@ -102,7 +108,7 @@ $ConfirmationrecordCounts = $years->groupBy('year')->map(function ($confirmation
 
         
         // Retrieve confirmation records with `archive` set to 1
-        $confirmationRecords = ConfirmationRecord::where('archive', 1)->get();
+        $confirmationRecords = ConfirmationRecord::where('archive', 0)->whereDate('confirmation_date', $today)->get();
         
         $confirmationFolder = null; // Initialize variable to avoid undefined error
         $confirmationYear = null;
@@ -137,7 +143,7 @@ $ConfirmationrecordCounts = $years->groupBy('year')->map(function ($confirmation
         
 
      
-        $WeddingRecords = WeddingRecord::where('archive', 1)->get();
+        $WeddingRecords = WeddingRecord::where('archive', 0)->whereDate('wedding_date', $today)->get();
 
     
         $wedding_ids = $WeddingRecords->pluck('wedding_id')->unique(); 
@@ -165,7 +171,7 @@ $FuneralrecordCounts = $funerals->groupBy('year')->map(function ($funerals, $yea
 
 
      
-        $FuneralRecords = FuneralRecord::where('archive', 1)->get();
+        $FuneralRecords = FuneralRecord::where('archive', 0)->whereDate('funeral_date', $today)->get();
 
     
         $funeral_ids = $FuneralRecords->pluck('wedding_id')->unique(); 
@@ -178,7 +184,7 @@ $FuneralrecordCounts = $funerals->groupBy('year')->map(function ($funerals, $yea
         }
         
 
-        return view('archives/archives', compact(
+        return view('managebook/manage', compact(
             
             'members',
             'volunteers',
@@ -207,5 +213,4 @@ $FuneralrecordCounts = $funerals->groupBy('year')->map(function ($funerals, $yea
         ));
     }
 
-   
 }

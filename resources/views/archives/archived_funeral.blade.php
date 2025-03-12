@@ -40,16 +40,10 @@
                                                 >
                                                     <i class="fa fa-edit"></i>
                                                 </button>
-                                                <button
-                                                    type="button"
-                                                    data-bs-toggle="tooltip"
-                                                    title="Move to Archive"
-                                                    class="btn btn-link btn-danger"
-                                                    data-original-title="Remove"
-                                                    onclick="window.location.href='/funeralfolder/archive/'"
-                                                >
-                                                    <i class="fas fa-archive"></i>
-                                                </button>
+                                                <button type="button" data-bs-toggle="tooltip" class="btn btn-link btn-secondary btn-lg" title="Retrieve"
+                                              onclick="confirmRetrieveFolderfuneral({{ $funeral['year'] }})">
+                                          <i class="fas fa-undo"></i>
+                                          </button>
                                             </div>
                                         </td>
                                     </tr>
@@ -99,10 +93,10 @@
                                             onclick="editFuneralRecord({{ json_encode($record)}})">
                                             <i class="fa fa-edit"></i>
                                         </button>
-                                              <button type="button" data-bs-toggle="tooltip" title="Move to Archive"
-                                                  class="btn btn-link btn-danger"  onclick="window.location.href='/funeralrecord/archive/{{ $record->id }}'">
-                                                  <i class="fas fa-archive"></i>
-                                              </button>
+                                        <button type="button" data-bs-toggle="tooltip" class="btn btn-link btn-secondary btn-lg" title="Retrieve"
+                                        onclick="confirmRetrieveRecordfuneral({{ $record['id'] }})">
+                                    <i class="fas fa-undo"></i>
+                                    </button>
                                           </div>
                                       </td>
                                   </tr>
@@ -111,3 +105,36 @@
                           </table>
                       </div>
                         </div>
+
+                        <script>
+                            function confirmRetrieveFolderfuneral(year) {
+                                Swal.fire({
+                                    title: 'Are you sure?',
+                                    text: "Do you want to retrieve this Funeral Folder?",
+                                    icon: 'question',
+                                    showCancelButton: true,
+                                    confirmButtonText: 'Yes, retrieve it!',
+                                    cancelButtonText: 'No, cancel',
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        // Redirect to the retrieval route
+                                        window.location.href = '/funeralfolder/archive/retrieve/' + year;
+                                    }
+                                });
+                            }
+                            function confirmRetrieveRecordfuneral(id) {
+                                Swal.fire({
+                                    title: 'Are you sure?',
+                                    text: "Do you want to retrieve this Funeral record?",
+                                    icon: 'question',
+                                    showCancelButton: true,
+                                    confirmButtonText: 'Yes, retrieve it!',
+                                    cancelButtonText: 'No, cancel',
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        // Redirect to the retrieval route
+                                        window.location.href = '/funeral_record_archived/retrieve/' + id;
+                                    }
+                                });
+                            }
+                        </script>

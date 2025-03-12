@@ -321,5 +321,14 @@ public function print($id)  {
     return view('record.baptism_print',compact('bookRecord', 'godparents','bookFolder', 'baptismYear', 'baptismID'));
 }
 
+public function retrieve($id)
+{
+    $record = BookRecord::findOrFail($id); // Replace `BookRecord` with your actual model
+    $record->archive = 0; // Set archive field to 0
+    $record->save();
+
+    return redirect()->back()->with('success', 'Record successfully retrieved.');
+}
+
     
 }

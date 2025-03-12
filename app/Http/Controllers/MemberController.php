@@ -134,4 +134,14 @@ class MemberController extends Controller
     
         return redirect()->back()->with('success', 'Member archived successfully.');
     }
+
+    public function retrieve($id)
+    {
+        $member = Member::findOrFail($id);
+        $member->archive = 0;
+        $member->save();
+    
+        return redirect()->back()->with('success', 'Member archived successfully.');
+    }
+
 }

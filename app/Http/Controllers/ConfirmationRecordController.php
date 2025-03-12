@@ -254,4 +254,12 @@ public function certificate($id)
           return redirect()->back();
     }
     
+    public function retrieve($id)
+{
+    $record = ConfirmationRecord::findOrFail($id); // Replace `BookRecord` with your actual model
+    $record->archive = 0; // Set archive field to 0
+    $record->save();
+
+    return redirect()->back()->with('success', 'Record successfully retrieved.');
+}
 }

@@ -39,17 +39,10 @@
                                 >
                                     <i class="fa fa-edit"></i>
                                 </button>
-                                <button
-                                    type="button"
-                                    data-bs-toggle="tooltip"
-                                    title="Move to Archive"
-                                    class="btn btn-link btn-danger"
-                                    data-original-title="Move to Archive"
-                                    onclick="window.location.href='/confirmationfolder/archive/'"
-                                    
-                                >
-                                    <i class="fas fa-archive"></i>
-                                </button>
+                                <button type="button" data-bs-toggle="tooltip" class="btn btn-link btn-secondary btn-lg" title="Retrieve"
+                                onclick="confirmRetrieveFolderconfirmation({{ $confirmation['year'] }})">
+                            <i class="fas fa-undo"></i>
+                        </button>
                             </div>
                         </td>
                     </tr>
@@ -103,11 +96,10 @@
                                         <button type="button" data-bs-toggle="tooltip" title="Edit Confirmation Record" class="btn btn-link btn-primary btn-lg"
                                             onclick="editConfirmationRecord({{ json_encode($record)}})">
                                             <i class="fa fa-edit"></i>
+                                            <button type="button" data-bs-toggle="tooltip" class="btn btn-link btn-secondary btn-lg" title="Retrieve"
+                                            onclick="confirmRetrieveRecordconfirmation({{ $record['id'] }})">
+                                        <i class="fas fa-undo"></i>
                                         </button>
-                                              <button type="button" data-bs-toggle="tooltip" title="Move to Archive"
-                                                  class="btn btn-link btn-danger" onclick="window.location.href='/confirmationrecord/archive/{{ $record->id }}'">
-                                                  <i class="fas fa-archive"></i>
-                                              </button>
                                           </div>
                                       </td>
                                   </tr>
@@ -117,3 +109,37 @@
                           </table>
                       </div>
                         </div>
+
+                        <!--java script-->
+                        <script>
+                            function confirmRetrieveFolderconfirmation(year) {
+                                Swal.fire({
+                                    title: 'Are you sure?',
+                                    text: "Do you want to retrieve this Confirmation Folder?",
+                                    icon: 'question',
+                                    showCancelButton: true,
+                                    confirmButtonText: 'Yes, retrieve it!',
+                                    cancelButtonText: 'No, cancel',
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        // Redirect to the retrieval route
+                                        window.location.href = '/confirmationfolder/archive/retrieve/' + year;
+                                    }
+                                });
+                            }
+                            function confirmRetrieveRecordconfirmation(id) {
+                                Swal.fire({
+                                    title: 'Are you sure?',
+                                    text: "Do you want to retrieve this Confirmation record?",
+                                    icon: 'question',
+                                    showCancelButton: true,
+                                    confirmButtonText: 'Yes, retrieve it!',
+                                    cancelButtonText: 'No, cancel',
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        // Redirect to the retrieval route
+                                        window.location.href = '/confirmationrecord/archive/retrieve/' + id;
+                                    }
+                                });
+                            }
+                        </script>

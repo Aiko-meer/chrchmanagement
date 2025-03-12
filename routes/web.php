@@ -11,6 +11,7 @@ use App\Models\Funeral_folder;
 use App\Models\Book_folder;
 use App\Models\Schedule;
 use App\Http\Controllers\BaptismFolderController;
+use App\Http\Controllers\ManagebookController;
 use App\Http\Controllers\BookFolderController;
 use App\Http\Controllers\BookRecordController;
 use App\Http\Controllers\MemberController;
@@ -32,10 +33,12 @@ Route::get('/','App\Http\Controllers\ChurchController@index')->middleware('auth'
 Route::get('/baptism', [BaptismFolderController::class, 'index'])->name('baptism.index')->middleware('auth');
 Route::post('/add-year', [BaptismFolderController::class, 'addYear'])->name('add.year')->middleware('auth');
 Route::get('/baptism_archive/{id}', [BaptismFolderController::class, 'archive'])->name('baptism.archive')->middleware('auth');
+Route::get('/baptism_retrieve/{year}', [BaptismFolderController::class, 'retrieve'])->name('baptism.retrieve')->middleware('auth');
 Route::get('/baptism_archive/month/{year}', [BaptismFolderController::class, 'month'])->name('baptism.archive.month')->middleware('auth');
 //book
 Route::get('/book/{baptism_id}', [BookFolderController::class, 'showByBaptism'])->name('book.showByBaptism')->middleware('auth');
 Route::get('/book_archived/{baptism_id}', [BookFolderController::class, 'showByBaptismArchived'])->name('book.showByBaptismArchived')->middleware('auth');
+Route::get('/book_archived/retrieve/{baptism_id}', [BookFolderController::class, 'retrieve'])->name('book.retrieve')->middleware('auth');
 Route::post('/book/store', [BookFolderController::class, 'store'])->name('book.store')->middleware('auth');
 Route::get('/bookfolder_archive/{id}', [BookFolderController::class, 'archive'])->name('bookfolder.archive')->middleware('auth');
 
@@ -50,6 +53,7 @@ Route::get('/delete_record/{id}', [BookRecordController::class, 'destroy'])->nam
 Route::post('/book_record/{baptism_id}', [BookRecordController::class, 'store'])->name('baptism.record.store')->middleware('auth');
 Route::get('/book-record/{id}', [BookRecordController::class, 'showInfo'])->name('book.record.info')->middleware('auth');
 Route::get('/bookrecord/archive/{id}', [BookRecordController::class, 'archive'])->name('bookrecord.archive')->middleware('auth');
+Route::get('/bookrecord_retrieve/{id}', [BookRecordController::class, 'retrieve'])->name('bookrecord.retrieve')->middleware('auth');
 Route::get('/baptism_certificate/{id}', [BookRecordController::class, 'certificate'])->name('book_record.certificate')->middleware('auth');
 Route::get('/baptism_print/{id}', [BookRecordController::class, 'print'])->name('book_record.print')->middleware('auth');
 
@@ -57,6 +61,7 @@ Route::get('/baptism_print/{id}', [BookRecordController::class, 'print'])->name(
 //confirmation
 Route::get('/confirmation', [ConfirmationFolderController::class, 'index'])->name('baptism.index')->middleware('auth');
 Route::get('/confirmationfolder/archive/{id}', [ConfirmationFolderController::class, 'archive'])->name('confirmationfolder.archive')->middleware('auth');
+Route::get('/confirmationfolder/archive/retrieve/{year}', [ConfirmationFolderController::class, 'retrieve'])->name('confirmationfolder.retrieve')->middleware('auth');
 Route::get('/confirmationfolder/archive/month/{year}', [ConfirmationFolderController::class, 'month'])->name('confirmationfolder.archive.month')->middleware('auth');
 Route::post('/add-year-confirmation', [ConfirmationFolderController::class, 'addYear'])->name('add.year.confirmation')->middleware('auth');
 //confirmation record
@@ -65,6 +70,7 @@ Route::get('/confirmation_record_archive/{confirmation_id}', [ConfirmationRecord
 Route::post('/confirmation-record', [ConfirmationRecordController::class, 'store'])->name('confirmation.record.store')->middleware('auth');
 Route::get('/confirmation/{id}', [ConfirmationRecordController::class, 'showConfirmationInfo'])->name('confirmation.info')->middleware('auth');
 Route::get('/confirmationrecord/archive/{id}', [ConfirmationRecordController::class, 'archive'])->name('confirmationrecord.archive')->middleware('auth');
+Route::get('/confirmationrecord/archive/retrieve/{id}', [ConfirmationRecordController::class, 'retrieve'])->name('confirmationrecord.retrieve')->middleware('auth');
 Route::put('/confirmation-record/update', [ConfirmationRecordController::class, 'update'])->name('confirmation.record.update')->middleware('auth');
 
 Route::get('/confirmation_certificate/{id}', [ConfirmationRecordController::class, 'certificate'])->name('book_record.certificate')->middleware('auth');
@@ -78,22 +84,25 @@ Route::post('/add-year-wedding', [WeddingFolderController::class, 'addYear'])->n
 Route::get('/weddingfolder/archive/{id}', [WeddingFolderController::class, 'archive'])->name('weddingfolder.archive')->middleware('auth');
 Route::get('/weddingfolder/archive/month/{year}', [WeddingFolderController::class, 'month'])->name('weddingfolder.archive.month')->middleware('auth');
 Route::get('/weddingrecord/archive/{id}', [WeddingFolderController::class, 'archive_record'])->name('weddingrecord.archive')->middleware('auth');
-
+Route::get('/weddingrecord/archive/retrieve/{year}', [WeddingFolderController::class, 'retrieve'])->name('weddingrecord.retrive')->middleware('auth');
+Route::get('/weddingrecord/archive/retrieverecord/{id}', [WeddingFolderController::class, 'retrieve'])->name('weddingrecord.retrive')->middleware('auth');
 
 Route::put('/weddings/update', [WeddingFolderController::class, 'update'])->name('weddings.update')->middleware('auth'); // Update a wedding record
 Route::get('/wedding_info/{wedding_id}', [WeddingFolderController::class, 'showWeddingInfo'])->name('wedding.info')->middleware('auth');
 //funeral
-Route::get('/funeral', [FuneralFolderController::class, 'index'])->name('baptism.index')->middleware('auth');
+Route::get('/funeral', [FuneralFolderController::class, 'index'])->name('funeral.index')->middleware('auth');
 Route::get('/funeral_record', 'App\Http\Controllers\ChurchController@funeral_record')->middleware('auth');
 
 Route::post('/add-year-funeral', [FuneralFolderController::class, 'addYear'])->name('add.year.funeral')->middleware('auth');
 Route::get('/funeralfolder/archive/{id}', [FuneralFolderController::class, 'archive'])->name('funeralfolder.archive')->middleware('auth');
+Route::get('/funeralfolder/archive/retrieve/{year}', [FuneralFolderController::class, 'retrieve'])->name('funeralfolder.retrieve')->middleware('auth');
 Route::get('/funeralfolder/archive/month/{year}', [FuneralFolderController::class, 'month'])->name('funeralfolder.archive,month')->middleware('auth');
 
 
 //funeralRecord
 Route::get('/funeral_record/{funerals_id}', [FuneralRecordController::class, 'showByFuneral'])->name('funeral_record.showByFuneral')->middleware('auth');
 Route::get('/funeral_record_archived/{funerals_id}', [FuneralRecordController::class, 'showByFuneralArchived'])->name('funeral_record.showByFuneralArchived')->middleware('auth');
+Route::get('/funeral_record_archived/retrieve/{id}', [FuneralRecordController::class, 'retrieve'])->name('funeral_record.retrieve')->middleware('auth');
 Route::post('/funeral-record', [FuneralRecordController::class, 'store'])->name('funeral.record.store')->middleware('auth');
 Route::put('/funeral-record/update', [FuneralRecordController::class, 'update'])->name('funeral.record.update')->middleware('auth');
 Route::get('/funeral/{id}', [FuneralRecordController::class, 'showFuneralInfo'])->name('funeral.info')->middleware('auth');
@@ -104,12 +113,14 @@ Route::post('/member', [MemberController::class, 'store'])->name('member.store')
 Route::resource('members', MemberController::class)->middleware('auth');
 Route::put('/members/{member}', [MemberController::class, 'update'])->name('members.update')->middleware('auth');
 Route::get('/members/archive/{id}', [MemberController::class, 'archive'])->name('members.archive')->middleware('auth');
+Route::get('/members/archive/retrieve/{id}', [MemberController::class, 'retrieve'])->name('members.retrieve')->middleware('auth');
 //volunteer
 Route::get('/volunteer', [VolunteerController::class, 'index'])->name('volunteers.index')->middleware('auth');
 Route::post('/volunteer', [VolunteerController::class, 'store'])->name('volunteer.store')->middleware('auth');
 Route::resource('volunteers', VolunteerController::class)->middleware('auth')->middleware('auth');
 Route::put('/volunteers/{volunteer}', [VolunteerController::class, 'update'])->name('volunteers.update')->middleware('auth');
 Route::get('/volunteers/archive/{id}', [VolunteerController::class, 'archive'])->name('volunteers.archive')->middleware('auth');
+Route::get('/volunteers/archive/retrieve/{id}', [VolunteerController::class, 'retrieve'])->name('volunteers.retrieve')->middleware('auth');
 
 Route::get('/collection', [CollectionController::class, 'index'])->middleware('auth');
 Route::get('/collection_info/{id}', [CollectionController::class, 'info'])->name('collection.info')->middleware('auth');
@@ -132,6 +143,8 @@ Route::get('/payment/archive/{id}', [PaymentController::class, 'archive'])->name
 Route::get('/archive', [ArchiveController::class, 'index'])->name('archives.index')->middleware('auth');
 Route::get('/archives/{category}', [ArchiveController::class, 'fetch'])->name('archives.fetch')->middleware('auth');
 
+//mangebook
+Route::get('/managebook', [ManagebookController::class, 'index'])->name('managebook.index')->middleware('auth');
 
 
 

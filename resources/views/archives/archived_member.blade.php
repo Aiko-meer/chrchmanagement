@@ -51,14 +51,10 @@
                                     )">
                                     <i class="fa fa-edit"></i>
                                 </button>
-                                <button
-                                    type="button"
-                                    data-bs-toggle="tooltip"
-                                    class="btn btn-link btn-danger"
-                                    title="Move to Archive"
-                                    onclick="window.location.href='/members/archive/{{ $member->id }}'">
-                                    <i class="fas fa-archive"></i>
-                                </button>
+                                <button type="button" data-bs-toggle="tooltip" class="btn btn-link btn-secondary btn-lg" title="Retrieve"
+                                              onclick="confirmRetrievemember({{ $member['id'] }})">
+                                          <i class="fas fa-undo"></i>
+                                          </button>
                             </div>
                         </td>
                     </tr>
@@ -121,14 +117,10 @@
                                     )">
                                     <i class="fa fa-edit"></i>
                                 </button>
-                                <button
-                                    type="button"
-                                    data-bs-toggle="tooltip"
-                                    class="btn btn-link btn-danger"
-                                    title="Move to Archive"
-                                    onclick="window.location.href='/volunteers/archive/{{ $volunteer->id }}'">
-                                    <i class="fas fa-archive"></i>
-                                </button>
+                                <button type="button" data-bs-toggle="tooltip" class="btn btn-link btn-secondary btn-lg" title="Retrieve"
+                                              onclick="confirmRetrievevolunteer({{ $volunteer['id'] }})">
+                                          <i class="fas fa-undo"></i>
+                                          </button>
                             </div>
                         </td>
                     </tr>
@@ -137,3 +129,36 @@
         </table>
     </div>
 </div>
+
+<script>
+    function confirmRetrievemember(id) {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "Do you want to retrieve this Member?",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, retrieve it!',
+            cancelButtonText: 'No, cancel',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Redirect to the retrieval route
+                window.location.href = '/members/archive/retrieve/' + id;
+            }
+        });
+    }
+    function confirmRetrievevolunteer(id) {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "Do you want to retrieve this Volunteer?",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, retrieve it!',
+            cancelButtonText: 'No, cancel',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Redirect to the retrieval route
+                window.location.href = '/volunteers/archive/retrieve/' + id;
+            }
+        });
+    }
+</script>

@@ -140,4 +140,13 @@ class FuneralRecordController extends Controller
         // Redirect back with a success message
         return redirect()->back()->with('success', 'Funeral record archived successfully.');
     }
+
+    public function retrieve($id)
+{
+    $record = FuneralRecord::findOrFail($id); // Replace `BookRecord` with your actual model
+    $record->archive = 0; // Set archive field to 0
+    $record->save();
+
+    return redirect()->back()->with('success', 'Record successfully retrieved.');
+}
 }

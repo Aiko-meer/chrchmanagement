@@ -65,4 +65,13 @@ class BookFolderController extends Controller
     // Redirect back with a success message
     return redirect()->back()->with('success', 'Book folder moved to archive successfully.');
 }
+
+public function retrieve($id)
+{
+    // Update all records where the baptism_date is in the given year
+    BookFolder::where('id', $id)
+                  ->update(['archive' => 0]);
+
+    return redirect()->back()->with('success', "All Book Record for  have been retrieved.");
+}
 }

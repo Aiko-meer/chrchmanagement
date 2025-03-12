@@ -135,4 +135,13 @@ class VolunteerController extends Controller
 
     return redirect()->back()->with('success', 'Volunteer archived successfully.');
 }
+
+public function retrieve($id)
+{
+    $volunteer = Volunteer::findOrFail($id);
+    $volunteer->archive = 0;
+    $volunteer->save();
+
+    return redirect()->back()->with('success', 'Volunteer archived successfully.');
+}
 }

@@ -470,6 +470,23 @@ public function showWeddingInfo($wedding_id)
     ));
     }
 
+    public function retrieve($year)
+    {
+        // Update all records where the baptism_date is in the given year
+        WeddingFolder::where('year', $year)
+                      ->update(['archive' => 0]);
+    
+        return redirect()->back()->with('success', "All confirmation records for $year have been retrieved.");
+    }
+
+    public function retrievewedding($id)
+{
+    $record = WeddingRecord::findOrFail($id); // Replace `BookRecord` with your actual model
+    $record->archive = 0; // Set archive field to 0
+    $record->save();
+
+    return redirect()->back()->with('success', 'Record successfully retrieved.');
+}
 
 
     
