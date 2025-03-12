@@ -79,10 +79,17 @@ $groupedConfirmationCounts = $years->groupBy('year')->map(function ($confirmatio
             ];
         });
 
-        $today = Carbon::today()->format('y-m-d');
-        $bookRecords = BookRecord::whereDate('baptism_date', $today)
-        ->where('archive', 0)
-        ->get();
+       
+       
+
+        $month = Carbon::now()->month; // Get current month (numeric, e.g., 3 for March)
+        $year = Carbon::now()->year;   // Get current year (e.g., 2025)
+        
+        $bookRecords = BookRecord::whereMonth('baptism_date', $month)
+            ->whereYear('baptism_date', $year)
+            ->where('archive', 0)
+            ->get();
+        
 
        
     
@@ -108,8 +115,11 @@ $ConfirmationrecordCounts = $years->groupBy('year')->map(function ($confirmation
 
         
         // Retrieve confirmation records with `archive` set to 1
-        $confirmationRecords = ConfirmationRecord::where('archive', 0)->whereDate('confirmation_date', $today)->get();
-        
+        $confirmationRecords = ConfirmationRecord::whereMonth('confirmation_date', $month)
+        ->whereYear('confirmation_date', $year)
+        ->where('archive', 0)
+        ->get();
+
         $confirmationFolder = null; // Initialize variable to avoid undefined error
         $confirmationYear = null;
         $confirmationID = null;
@@ -143,7 +153,10 @@ $ConfirmationrecordCounts = $years->groupBy('year')->map(function ($confirmation
         
 
      
-        $WeddingRecords = WeddingRecord::where('archive', 0)->whereDate('wedding_date', $today)->get();
+        $WeddingRecords = WeddingRecord::whereMonth('wedding_date', $month)
+        ->whereYear('wedding_date', $year)
+        ->where('archive', 0)
+        ->get();
 
     
         $wedding_ids = $WeddingRecords->pluck('wedding_id')->unique(); 
@@ -171,8 +184,10 @@ $FuneralrecordCounts = $funerals->groupBy('year')->map(function ($funerals, $yea
 
 
      
-        $FuneralRecords = FuneralRecord::where('archive', 0)->whereDate('funeral_date', $today)->get();
-
+        $FuneralRecords = FuneralRecord::whereMonth('funeral_date', $month)
+        ->whereYear('funeral_date', $year)
+        ->where('archive', 0)
+        ->get();
     
         $funeral_ids = $FuneralRecords->pluck('wedding_id')->unique(); 
 

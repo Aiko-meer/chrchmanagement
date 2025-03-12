@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\ConfirmationFolder;
+use Illuminate\Support\Carbon;
 use App\Models\ConfirmationRecord;
 class ConfirmationRecordController extends Controller
 {
@@ -262,4 +263,16 @@ public function certificate($id)
 
     return redirect()->back()->with('success', 'Record successfully retrieved.');
 }
+
+public function checkConfirmation(Request $request)
+    {
+        $MAX_CONFIRMATIONS_PER_DAY = 2; // Change as needed
+        $confirmationDate = Carbon::parse($request->date)->format('Y-m-d');
+
+        $existingConfirmations = ConfirmationRecord::whereDate('confirmation_date', $confirmationDate)->count();
+
+        return response()->json([
+            'isFull' => $existingConfirmations >= $MAX_CONFIRMATIONS_PER_DAY
+        ]);
+    }
 }

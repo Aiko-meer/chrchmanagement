@@ -310,59 +310,78 @@
 </script>
 <script>
 $(document).ready(function() {
-    $('#baptismRecordForm').on('submit', function(e) {
-        e.preventDefault(); // Prevent default form submission behavior
+  $(document).ready(function() {
+  $('#baptismRecordForm').on('submit', function(e) {
+    e.preventDefault(); // Prevent default form submission
 
-        const submitButton = $(this).find('button[type="submit"]');
-        submitButton.prop('disabled', true).text('Submitting...');
+    const submitButton = $(this).find('button[type="submit"]');
+    submitButton.prop('disabled', true).text('Submitting...');
 
-        $('.form-error').remove(); // Clear previous error messages
+    $('.form-error').remove(); // Clear previous error messages
 
-        $.ajax({
-            type: 'POST',
-            url: $(this).attr('action'),
-            data: $(this).serialize(),
-            success: function(response) {
-                console.log(response); // Debugging
-                if (response.success) {
-                    Swal.fire({
-                        title: 'Success!',
-                        text: response.message,
-                        icon: 'success',
-                        confirmButtonText: 'Okay'
-                    }).then(() => {
-                        location.reload(); // Reload the page after closing the alert
-                    });
-                } else {
-                    Swal.fire({
-                        title: 'Error!',
-                        text: 'Something went wrong. Please try again.',
-                        icon: 'error',
-                        confirmButtonText: 'Okay'
-                    });
-                }
-            },
-            error: function(xhr) {
-                submitButton.prop('disabled', false).text('Submit');
+    $.ajax({
+        type: 'POST',
+        url: $(this).attr('action'),
+        data: $(this).serialize(),
+        success: function(response) {
+    console.log("✅ Success Response:", response); // Debugging
 
-                if (xhr.status === 422) {
-                    const errors = xhr.responseJSON.errors;
-                    for (const field in errors) {
-                        const errorMsg = `<div class="form-error text-danger">${errors[field][0]}</div>`;
-                        $(`#${field}`).after(errorMsg); // Display error after the field
-                    }
-                } else {
-                    Swal.fire({
-                        title: 'Error!',
-                        text: 'An error occurred. Please try again later.',
-                        icon: 'error',
-                        confirmButtonText: 'Okay'
-                    });
-                }
-            }
+    if (response.success) {
+        Swal.fire({
+            title: 'Success!',
+            text: response.message,
+            icon: 'success',
+            confirmButtonText: 'Okay'
+        }).then(() => {
+            location.reload(); // Reload the page after closing the alert
         });
+    } else {
+        // If success = false, handle it as an error
+        Swal.fire({
+            title: 'Limit Reached!',
+            text: response.message,
+            icon: 'warning',
+            confirmButtonText: 'Okay'
+        });
+    }
+},
+        error: function(xhr) {
+    submitButton.prop('disabled', false).text('Submit');
+
+    console.log("❌ Error Response:", xhr); 
+    console.log("❌ Status Code:", xhr.status); // Log status code
+    console.log("❌ Response JSON:", xhr.responseJSON); // Log full response
+
+    if (xhr.status === 400) {
+        Swal.fire({
+            title: 'Limit Reached!',
+            text: xhr.responseJSON?.message || 'Sorry, no more bookings allowed for this date.',
+            icon: 'warning',
+            confirmButtonText: 'Okay'
+        });
+    } 
+    else if (xhr.status === 422) {
+        const errors = xhr.responseJSON.errors;
+        for (const field in errors) {
+            const errorMsg = `<div class="form-error text-danger">${errors[field][0]}</div>`;
+            $(`#${field}`).after(errorMsg);
+        }
+    } 
+    else {
+        Swal.fire({
+            title: 'Error!',
+            text: 'An error occurred. Please try again later.',
+            icon: 'error',
+            confirmButtonText: 'Okay'
+        });
+    }
+}
+
     });
+  });
 });
+
+}
 </script>
 <div class="container">
     <div class="page-inner">
@@ -441,13 +460,41 @@ $(document).ready(function() {
                                 </div>
                                 
                                 <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="baptismDate">Date of Baptism</label>
-                                        <input type="date" class="form-control" id="baptismDate" name="baptismDate" required>
-                                    </div>
-                                </div>
+    <div class="form-group">
+        <label for="baptismDate">Date of Baptism</label>
+        <input type="date" class="form-control" id="baptismDate" name="baptismDate" required>
+        <small id="dateError" class="text-danger"></small> <!-- Error Message -->
+    </div>
+</div>
                             </div>
+                            <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(document).ready(function() {
+    $('#baptismDate').on('change', function() {
+        let selectedDate = $(this).val();
+        
+        if (!selectedDate) return; // Stop if no date selected
 
+        $.ajax({
+            url: '/check-baptism-date', // Laravel route to check the date
+            type: 'GET',
+            data: { date: selectedDate },
+            success: function(response) {
+                if (response.isFull) {
+                    $('#baptismDate').css('border-color', 'red').css('color', 'red');
+                    $('#dateError').text('This date is fully booked. Please select another date.');
+                } else {
+                    $('#baptismDate').css('border-color', '').css('color', '');
+                    $('#dateError').text('');
+                }
+            },
+            error: function(xhr) {
+                console.error("Error checking date:", xhr);
+            }
+        });
+    });
+});
+</script>
                             <!-- Child Information -->
                             <h5 class="fw-bold mb-3">Child Information</h5>
                             <div class="row">

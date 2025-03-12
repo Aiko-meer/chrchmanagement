@@ -70,10 +70,13 @@
                                     <div class="form-group">
                                         <label for="confirmationDate">Date of Confirmation</label>
                                         <input type="date" class="form-control" id="confirmationDate" name="confirmationDate" required>
+                                        <small id="dateError" class="text-danger"></small> <!-- Error Message -->
                                     </div>
                                 </div>
-                            </div>
 
+                                
+                            </div>
+                            
                             <!-- Child Information -->
                             <h5 class="fw-bold mb-3">Child Information</h5>
                             <div class="row">
@@ -563,7 +566,34 @@
     </div>
   </div>
 </div>
-
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+                            <script>
+                              $(document).ready(function() {
+                                  $('#confirmationDate').on('change', function() {  // ✅ Corrected the ID
+                                      let selectedDate = $(this).val();
+                                      
+                                      if (!selectedDate) return; // Stop if no date selected
+                              
+                                      $.ajax({
+                                          url: '/check-confirmation-date', // ✅ Correct route
+                                          type: 'GET',
+                                          data: { date: selectedDate },
+                                          success: function(response) {
+                                              if (response.isFull) {
+                                                  $('#confirmationDate').css('border-color', 'red').css('color', 'red'); // ✅ Corrected the ID
+                                                  $('#dateError').text('This date is fully booked. Please select another date.');
+                                              } else {
+                                                  $('#confirmationDate').css('border-color', '').css('color', ''); // ✅ Reset if available
+                                                  $('#dateError').text('');
+                                              }
+                                          },
+                                          error: function(xhr) {
+                                              console.error("Error checking date:", xhr);
+                                          }
+                                      });
+                                  });
+                              });
+                              </script>
 <script>
 function editConfirmationRecord(record) {
     // Dynamically update the form action URL with the record ID

@@ -7,132 +7,84 @@ use App\Models\BookRecord;
 use App\Models\GodParent;
 use App\Models\BookFolder;
 use App\Models\Baptism_folder;
+use Carbon\Carbon;
+use Illuminate\Http\Response;
+
 
 
 class BookRecordController extends Controller
 {
     public function store(Request $request)
-{
-    // Validate the request data
-    $validated = $request->validate([
-        'seriesYearNo' => 'required',
-        'bookNo' => 'required',
-        'pageNo' => 'required',
-       
-        'baptismDate' => 'required|date',
-        'childFirstName' => 'required',
-        'childMiddleName' => 'nullable',
-        'childLastName' => 'required',
-        'childDOB' => 'required|date',
-        'childProvince' => 'nullable',
-        'childCity' => 'nullable',
-        'fatherFirstName' => 'required',
-        'fatherMiddleName' => 'nullable',
-        'fatherLastName' => 'required',
-        'fatherProvince' => 'nullable',
-        'fatherCity' => 'nullable',
-        'motherFirstName' => 'required',
-        'motherMiddleName' => 'nullable',
-        'motherLastName' => 'required',
-        'motherProvince' => 'nullable',
-        'motherCity' => 'nullable',
-        'purokNo' => 'nullable',
-        'streetAddress' => 'nullable',
-        'barangay' => 'nullable',
-        'residenceProvince' => 'nullable',
-        'residenceCity' => 'nullable',
-        // Godparent validation (nullable and array check)
-        'godparentFirstName' => 'array|nullable',
-        'godparentMiddleName' => 'array|nullable',
-        'godparentLastName' => 'array|nullable',
-        'godparentPurok' => 'array|nullable',
-        'godparentStreetAddress' => 'array|nullable',
-        'godparentBarangay' => 'array|nullable',
-        'godparentCity' => 'array|nullable',
-        'godparentProvince' => 'array|nullable',
-        'baptism_id' => 'required',
-    ]);
-
-
-    $baptismYear = $request->baptismYear;
-    $baptismID = $request->baptismid;
-    $latestRecord = BookRecord::where('book_id', $validated['baptism_id'])
+    {
+        $MAX_BOOKINGS_PER_DAY = 2; // Set max bookings per day
+    
+        // Validate request
+        $validated = $request->validate([
+            'seriesYearNo' => 'required',
+            'bookNo' => 'required',
+            'pageNo' => 'required',
+            'baptismDate' => 'required|date',
+            'childFirstName' => 'required',
+            'childMiddleName' => 'nullable',
+            'childLastName' => 'required',
+            'childDOB' => 'required|date',
+            'fatherFirstName' => 'required',
+            'fatherMiddleName' => 'nullable',
+            'fatherLastName' => 'required',
+            'motherFirstName' => 'required',
+            'motherMiddleName' => 'nullable',
+            'motherLastName' => 'required',
+            'baptism_id' => 'required',
+        ]);
+    
+        // Convert baptism date to Y-m-d format
+        $baptismDate = Carbon::parse($validated['baptismDate'])->format('Y-m-d');
+    
+        // Count existing bookings for the date
+        $existingBookings = BookRecord::whereDate('baptism_date', $baptismDate)->count();
+    
+        // **Check if booking limit reached**
+        if ($existingBookings >= $MAX_BOOKINGS_PER_DAY) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Sorry, the maximum number of baptisms for this date has been reached. Please choose another date.'
+            ], Response::HTTP_BAD_REQUEST); // Uses Symfony HTTP status codes
+        }
+        
+        
+    
+        // Generate new record code
+        $baptismYear = date('Y', strtotime($baptismDate));
+        $latestRecord = BookRecord::where('book_id', $validated['baptism_id'])
             ->orderBy('id', 'desc')
             ->first();
-
-       
-        $nextNumber = 1;
-
-        if ($latestRecord) {
-           
-            $lastRecordCode = $latestRecord->record_code;
-            $lastNumber = (int)substr($lastRecordCode, -3);
-            $nextNumber = $lastNumber + 1; 
-        }
-
-
-        $newRecordCode = 'B' . $baptismYear . ' - ' . str_pad($nextNumber, 3, '0', STR_PAD_LEFT);
-  
-    $bookRecord = BookRecord::create([
-        'series_year_no' => $validated['seriesYearNo'],
-        'book_no' => $validated['bookNo'],
-        'page_no' => $validated['pageNo'],
-        'record_code' => $newRecordCode,
-        'baptism_date' => $validated['baptismDate'],
-        'child_first_name' => $validated['childFirstName'],
-        'child_middle_name' => $validated['childMiddleName'],
-        'child_last_name' => $validated['childLastName'],
-        'child_dob' => $validated['childDOB'],
-        'child_province' => $validated['childProvince'],
-        'child_city' => $validated['childCity'],
-        'father_first_name' => $validated['fatherFirstName'],
-        'father_middle_name' => $validated['fatherMiddleName'],
-        'father_last_name' => $validated['fatherLastName'],
-        'father_province' => $validated['fatherProvince'],
-        'father_city' => $validated['fatherCity'],
-        'mother_first_name' => $validated['motherFirstName'],
-        'mother_middle_name' => $validated['motherMiddleName'],
-        'mother_last_name' => $validated['motherLastName'],
-        'mother_province' => $validated['motherProvince'],
-        'mother_city' => $validated['motherCity'],
-        'purok_no' => $validated['purokNo'],
-        'street_address' => $validated['streetAddress'],
-        'barangay' => $validated['barangay'],
-        'residence_province' => $validated['residenceProvince'],
-        'residence_city' => $validated['residenceCity'],
-        'book_id' => $validated['baptism_id'],
-    ]);
-
-    // Save each godparent only if godparentFirstName exists and is not empty
-    if (isset($validated['godparentFirstName']) && count($validated['godparentFirstName']) > 0) {
-        foreach ($validated['godparentFirstName'] as $index => $firstName) {
-            if (!empty($firstName)) {
-                Godparent::create([
-                    'first_name' => $firstName,
-                    'middle_name' => $validated['godparentMiddleName'][$index] ?? null,
-                    'last_name' => $validated['godparentLastName'][$index],
-                    'purok_no' => $validated['godparentPurok'][$index] ?? null,
-                    'street_address' => $validated['godparentStreetAddress'][$index] ?? null,
-                    'barangay' => $validated['godparentBarangay'][$index] ?? null,
-                    'municipality_city' => $validated['godparentCity'][$index] ?? null,
-                    'province' => $validated['godparentProvince'][$index] ?? null,
-                    'baptism_id' => $bookRecord->id, // Ensure this matches the foreign key
-                ]);
-            }
-        }
-    }
-
-    // Return JSON response for AJAX or redirect with success message
-    if ($request->ajax()) {
-        return response()->json(['success' => true, 'message' => 'Baptism record and godparents saved successfully!']);
-    } else {
-        // Flash success message to the session
-        session()->flash('success', 'Baptism record and godparents saved successfully!');
     
-        // Return a JavaScript response that triggers the SweetAlert
-        return response()->json(['success' => true, 'message' => 'Baptism record and godparents saved successfully!']);
+        $lastNumber = $latestRecord ? (int)substr($latestRecord->record_code, -3) : 0;
+        $nextNumber = $lastNumber + 1;
+        $newRecordCode = 'B' . $baptismYear . ' - ' . str_pad($nextNumber, 3, '0', STR_PAD_LEFT);
+    
+        // Create new baptism record
+        BookRecord::create([
+            'series_year_no' => $validated['seriesYearNo'],
+            'book_no' => $validated['bookNo'],
+            'page_no' => $validated['pageNo'],
+            'record_code' => $newRecordCode,
+            'baptism_date' => $baptismDate,
+            'child_first_name' => $validated['childFirstName'],
+            'child_middle_name' => $validated['childMiddleName'],
+            'child_last_name' => $validated['childLastName'],
+            'child_dob' => $validated['childDOB'],
+            'father_first_name' => $validated['fatherFirstName'],
+            'father_middle_name' => $validated['fatherMiddleName'],
+            'father_last_name' => $validated['fatherLastName'],
+            'mother_first_name' => $validated['motherFirstName'],
+            'mother_middle_name' => $validated['motherMiddleName'],
+            'mother_last_name' => $validated['motherLastName'],
+            'book_id' => $validated['baptism_id'],
+        ]);
+    
+        return response()->json(['success' => true, 'message' => 'Baptism record saved successfully!']);
     }
-}
     public function showByBaptism($baptism_id)
     {
         // Fetch records from 'bookrecord' table where baptism_id matches
@@ -330,5 +282,15 @@ public function retrieve($id)
     return redirect()->back()->with('success', 'Record successfully retrieved.');
 }
 
-    
+public function checkBaptismDate(Request $request)
+{
+    $MAX_BOOKINGS_PER_DAY = 2;
+    $baptismDate = Carbon::parse($request->date)->format('Y-m-d');
+
+    $existingBookings = BookRecord::whereDate('baptism_date', $baptismDate)->count();
+
+    return response()->json([
+        'isFull' => $existingBookings >= $MAX_BOOKINGS_PER_DAY
+    ]);
+}
 }

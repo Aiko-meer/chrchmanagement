@@ -57,6 +57,13 @@ Route::get('/bookrecord_retrieve/{id}', [BookRecordController::class, 'retrieve'
 Route::get('/baptism_certificate/{id}', [BookRecordController::class, 'certificate'])->name('book_record.certificate')->middleware('auth');
 Route::get('/baptism_print/{id}', [BookRecordController::class, 'print'])->name('book_record.print')->middleware('auth');
 
+//check baptism record limit
+
+
+Route::get('/check-baptism-date', [BookRecordController::class, 'checkBaptismDate']);
+Route::get('/check-confirmation-date', [ConfirmationRecordController::class, 'checkConfirmation']);
+Route::get('/check-wedding-date', [WeddingFolderController::class, 'checkwedding']);
+Route::get('/check-funeral-date', [FuneralRecordController::class, 'checkfuneral']);
 
 //confirmation
 Route::get('/confirmation', [ConfirmationFolderController::class, 'index'])->name('baptism.index')->middleware('auth');
