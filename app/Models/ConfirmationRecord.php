@@ -40,5 +40,6 @@ class ConfirmationRecord extends Model
         'godparent_middle_name',
         'godparent_last_name',
         'archive',
+        'status',
     ];
 }

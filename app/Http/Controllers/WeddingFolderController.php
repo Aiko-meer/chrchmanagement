@@ -16,6 +16,7 @@ use App\Models\CollectionRecord;
 use App\Models\Funeral_folder;
 use App\Models\FuneralRecord;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 
 class WeddingFolderController extends Controller
 {
@@ -59,6 +60,7 @@ class WeddingFolderController extends Controller
         // Fetch records from 'bookrecord' table where baptism_id matches
         $WeddingRecords = WeddingRecord::where('wedding_id', $wedding_id)
         ->where('archive', 0)
+        ->where('status', 0)
         ->get();
         
 
@@ -479,6 +481,8 @@ public function showWeddingInfo($wedding_id)
         return redirect()->back()->with('success', "All confirmation records for $year have been retrieved.");
     }
 
+    
+
     public function retrievewedding($id)
 {
     $record = WeddingRecord::findOrFail($id); // Replace `BookRecord` with your actual model
@@ -487,7 +491,33 @@ public function showWeddingInfo($wedding_id)
 
     return redirect()->back()->with('success', 'Record successfully retrieved.');
 }
+public function status($id)
+{
+    $record = WeddingRecord::findOrFail($id); // Replace `BookRecord` with your actual model
+    $record->status = 1; // Set archive field to 0
+    $record->save();
 
+    return redirect()->back()->with('success', 'Wedding move in record.');
+}
 
+public function checkwedding(Request $request)
+    {
+        $MAX_CONFIRMATIONS_PER_DAY = 2; // Change as needed
+        $confirmationDate = Carbon::parse($request->date)->format('Y-m-d');
+
+        $existingConfirmations = WeddingRecord::whereDate('wedding_date', $confirmationDate)->count();
+
+        return response()->json([
+            'isFull' => $existingConfirmations >= $MAX_CONFIRMATIONS_PER_DAY
+        ]);
+    }
+
+    public function delete($id)
+    {
+        $record = WeddingRecord::findOrFail($id); // Replace `BookRecord` with your actual model
+        $record->delete();
+    
+        return redirect()->back()->with('success', "you have deleted a Wedding Book.");
+    }
     
 }

@@ -323,10 +323,14 @@
                                             onclick="editConfirmationRecord({{ json_encode($record)}})">
                                             <i class="fa fa-edit"></i>
                                         </button>
-                                              <button type="button" data-bs-toggle="tooltip" title="Move to Archive"
-                                                  class="btn btn-link btn-danger" onclick="window.location.href='/confirmationrecord/archive/{{ $record->id }}'">
-                                                  <i class="fas fa-archive"></i>
-                                              </button>
+                                        <button type="button" data-bs-toggle="tooltip" class="btn btn-link btn-danger btn-lg" title="Cancel"
+                                        onclick="confirmcancel({{ $record['id'] }})">
+                                        <i class="fas fa-times"></i>  <!-- Checkmark icon -->
+                                </button>
+                                              <button type="button" data-bs-toggle="tooltip" class="btn btn-link btn-secondary btn-lg" title="Mark as Done"
+                                        onclick="confirmcheck({{ $record['id'] }})">
+                                        <i class="fas fa-check"></i>  <!-- Checkmark icon -->
+                                </button>
                                           </div>
                                       </td>
                                   </tr>
@@ -566,6 +570,41 @@
     </div>
   </div>
 </div>
+
+<script>
+    function confirmcancel(id) {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "Do you want to Cancel the Confirmation Book?",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, Cancel Book!',
+            cancelButtonText: 'No, cancel',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Redirect to the retrieval route
+                window.location.href = '/confirmation/delete/' + id;
+            }
+        });
+    }
+</script>
+<script>
+    function confirmcheck(id) {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "Do you want to move the data into Records?",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, move the data!',
+            cancelButtonText: 'No, cancel',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Redirect to the retrieval route
+                window.location.href = '/confirmation/status/' + id;
+            }
+        });
+    }
+</script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
                             <script>
                               $(document).ready(function() {

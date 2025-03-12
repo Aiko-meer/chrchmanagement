@@ -12,7 +12,7 @@ class ConfirmationRecordController extends Controller
     {
         // Fetch records from 'bookrecord' table where baptism_id matches
         $confirmatioRecords = ConfirmationRecord::where('confirmation_id', $confirmation_id)
-        ->where('archive', 0)
+        ->where('archive', 0)->where('status', 0)
         ->get();
         
 
@@ -260,6 +260,23 @@ public function certificate($id)
     $record = ConfirmationRecord::findOrFail($id); // Replace `BookRecord` with your actual model
     $record->archive = 0; // Set archive field to 0
     $record->save();
+
+    return redirect()->back()->with('success', 'Record successfully retrieved.');
+}
+
+public function status($id)
+{
+    $record = ConfirmationRecord::findOrFail($id); // Replace `BookRecord` with your actual model
+    $record->status = 1; // Set archive field to 0
+    $record->save();
+
+    return redirect()->back()->with('success', 'Record successfully retrieved.');
+}
+
+public function destroy($id)
+{
+    $record = ConfirmationRecord::findOrFail($id); // Replace `BookRecord` with your actual model
+    $record->delete();
 
     return redirect()->back()->with('success', 'Record successfully retrieved.');
 }

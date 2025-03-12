@@ -5,14 +5,14 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Funeral_folder;
 use App\Models\FuneralRecord;
-
+use Illuminate\Support\Carbon;  
 class FuneralRecordController extends Controller
 {
     public function showByFuneral($funerals_id)
     {
         // Fetch records from 'bookrecord' table where baptism_id matches
         $funeralRecords = FuneralRecord::where('funeral_id', $funerals_id)
-        ->where('archive', 0)
+        ->where('archive', 0)->where('status', 0)
         ->get();
         
 
@@ -141,6 +141,19 @@ class FuneralRecordController extends Controller
         return redirect()->back()->with('success', 'Funeral record archived successfully.');
     }
 
+    public function status($id)
+    {
+        // Find the funeral record by ID
+        $funeralRecord = FuneralRecord::findOrFail($id);
+
+        // Update the archive status
+        $funeralRecord->status = 1; // Set to 1 to mark as archived
+        $funeralRecord->save();
+
+        // Redirect back with a success message
+        return redirect()->back()->with('success', 'Funeral record archived successfully.');
+    }
+
     public function retrieve($id)
 {
     $record = FuneralRecord::findOrFail($id); // Replace `BookRecord` with your actual model
@@ -149,4 +162,22 @@ class FuneralRecordController extends Controller
 
     return redirect()->back()->with('success', 'Record successfully retrieved.');
 }
+public function destroy($id)
+{
+    $record = FuneralRecord::findOrFail($id); // Replace `BookRecord` with your actual model
+    $record->delete();
+
+    return redirect()->back()->with('success', 'Record successfully retrieved.');
+}
+public function checkfuneral(Request $request)
+    {
+        $MAX_CONFIRMATIONS_PER_DAY = 2; // Change as needed
+        $confirmationDate = Carbon::parse($request->date)->format('Y-m-d');
+
+        $existingConfirmations = FuneralRecord::whereDate('funeral_date', $confirmationDate)->count();
+
+        return response()->json([
+            'isFull' => $existingConfirmations >= $MAX_CONFIRMATIONS_PER_DAY
+        ]);
+    }
 }

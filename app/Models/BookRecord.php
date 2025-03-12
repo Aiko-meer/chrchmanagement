@@ -15,6 +15,7 @@ class BookRecord extends Model
     // Define which attributes can be mass-assigned
     protected $fillable = [
         'archive',
+        'status',
         'series_year_no',
         'book_no',
         'page_no',

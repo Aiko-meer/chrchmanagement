@@ -32,6 +32,7 @@
                                     onclick="window.location.href='/bookrecord/archive/{{ $record->id }}'">
                                     <i class="fas fa-archive"></i>
                                 </button>
+                               
                             </div>
                         </td>
                     </tr>

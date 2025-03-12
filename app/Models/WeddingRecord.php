@@ -15,7 +15,7 @@ class WeddingRecord extends Model
         'record_code',
         'wedding_date',
         'archive',
-        
+        'status',
         'groom_first_name',
         'groom_middle_name',
         'groom_last_name',

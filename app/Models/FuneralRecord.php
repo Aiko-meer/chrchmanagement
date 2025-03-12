@@ -22,6 +22,7 @@ class FuneralRecord extends Model
         'dod',
         'contact',
         'archive',
+        'status',
         
     ];
 }

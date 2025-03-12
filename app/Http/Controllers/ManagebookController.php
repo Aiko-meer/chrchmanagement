@@ -82,12 +82,10 @@ $groupedConfirmationCounts = $years->groupBy('year')->map(function ($confirmatio
        
        
 
-        $month = Carbon::now()->month; // Get current month (numeric, e.g., 3 for March)
-        $year = Carbon::now()->year;   // Get current year (e.g., 2025)
+       
         
-        $bookRecords = BookRecord::whereMonth('baptism_date', $month)
-            ->whereYear('baptism_date', $year)
-            ->where('archive', 0)
+        $bookRecords = BookRecord::where('status', 1)
+        ->where('archive', 0)
             ->get();
         
 
@@ -115,8 +113,7 @@ $ConfirmationrecordCounts = $years->groupBy('year')->map(function ($confirmation
 
         
         // Retrieve confirmation records with `archive` set to 1
-        $confirmationRecords = ConfirmationRecord::whereMonth('confirmation_date', $month)
-        ->whereYear('confirmation_date', $year)
+        $confirmationRecords = ConfirmationRecord::where('status', 1)
         ->where('archive', 0)
         ->get();
 
@@ -153,8 +150,7 @@ $ConfirmationrecordCounts = $years->groupBy('year')->map(function ($confirmation
         
 
      
-        $WeddingRecords = WeddingRecord::whereMonth('wedding_date', $month)
-        ->whereYear('wedding_date', $year)
+        $WeddingRecords = WeddingRecord::where('status', 1)
         ->where('archive', 0)
         ->get();
 
@@ -184,8 +180,7 @@ $FuneralrecordCounts = $funerals->groupBy('year')->map(function ($funerals, $yea
 
 
      
-        $FuneralRecords = FuneralRecord::whereMonth('funeral_date', $month)
-        ->whereYear('funeral_date', $year)
+        $FuneralRecords = FuneralRecord::where('status', 1)
         ->where('archive', 0)
         ->get();
     

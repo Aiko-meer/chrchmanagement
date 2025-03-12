@@ -89,7 +89,7 @@ class BookRecordController extends Controller
     {
         // Fetch records from 'bookrecord' table where baptism_id matches
         $bookRecords = BookRecord::where('book_id', $baptism_id)
-        ->where('archive', 0)
+        ->where('archive', 0)->where('status', 0)
         ->get();
         
 
@@ -238,6 +238,8 @@ public function archive($id)
     return redirect()->back()->with('success', 'Book record archived successfully.');
 }
 
+
+
 public function certificate($id)  {
 
     $bookRecord = BookRecord::findOrFail($id);
@@ -293,4 +295,22 @@ public function checkBaptismDate(Request $request)
         'isFull' => $existingBookings >= $MAX_BOOKINGS_PER_DAY
     ]);
 }
+
+public function destroy($id)
+{
+    $record = BookRecord::findOrFail($id); // Replace `BookRecord` with your actual model
+    $record->delete(); // Permanently delete the record
+
+    return redirect()->back()->with('success', 'Record successfully deleted.');
+}
+
+public function check($id)
+{
+    $record = BookRecord::findOrFail($id); // Replace `BookRecord` with your actual model
+    $record->status = 1; // Set archive field to 0
+    $record->save();
+
+    return redirect()->back()->with('success', 'Record successfully retrieved.');
+}
+
 }

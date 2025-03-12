@@ -50,6 +50,7 @@ Route::put('/baptism-record/{id}', [BookRecordController::class, 'update'])->nam
 Route::get('/book_record/{baptism_id}', [BookRecordController::class, 'showByBaptism'])->name('book_record.showByBaptism')->middleware('auth');
 Route::get('/book_record_archived/{baptism_id}', [BookRecordController::class, 'showByBaptismArchived'])->name('book_record.showByBaptismArchived')->middleware('auth');
 Route::get('/delete_record/{id}', [BookRecordController::class, 'destroy'])->name('book_record.destroy')->middleware('auth');
+Route::get('/checkbaptism/{id}', [BookRecordController::class, 'check'])->name('book_record.check')->middleware('auth');
 Route::post('/book_record/{baptism_id}', [BookRecordController::class, 'store'])->name('baptism.record.store')->middleware('auth');
 Route::get('/book-record/{id}', [BookRecordController::class, 'showInfo'])->name('book.record.info')->middleware('auth');
 Route::get('/bookrecord/archive/{id}', [BookRecordController::class, 'archive'])->name('bookrecord.archive')->middleware('auth');
@@ -76,6 +77,8 @@ Route::get('/confirmation_record/{confirmation_id}', [ConfirmationRecordControll
 Route::get('/confirmation_record_archive/{confirmation_id}', [ConfirmationRecordController::class, 'showByFuneralArchived'])->name('funeral_record.showByFuneralArchived')->middleware('auth');
 Route::post('/confirmation-record', [ConfirmationRecordController::class, 'store'])->name('confirmation.record.store')->middleware('auth');
 Route::get('/confirmation/{id}', [ConfirmationRecordController::class, 'showConfirmationInfo'])->name('confirmation.info')->middleware('auth');
+Route::get('/confirmation/delete/{id}', [ConfirmationRecordController::class, 'destroy'])->name('confirmation.destroy')->middleware('auth');
+Route::get('/confirmation/status/{id}', [ConfirmationRecordController::class, 'status'])->name('confirmation.status')->middleware('auth');
 Route::get('/confirmationrecord/archive/{id}', [ConfirmationRecordController::class, 'archive'])->name('confirmationrecord.archive')->middleware('auth');
 Route::get('/confirmationrecord/archive/retrieve/{id}', [ConfirmationRecordController::class, 'retrieve'])->name('confirmationrecord.retrieve')->middleware('auth');
 Route::put('/confirmation-record/update', [ConfirmationRecordController::class, 'update'])->name('confirmation.record.update')->middleware('auth');
@@ -86,7 +89,9 @@ Route::get('/confirmation_print/{id}', [ConfirmationRecordController::class, 'pr
 Route::post('/wedding-record', [WeddingFolderController::class, 'store'])->name('wedding.record.store')->middleware('auth');
 Route::get('/wedding_record/{wedding_id}', [WeddingFolderController::class, 'showByWedding'])->name('wedding_record.showByWedding')->middleware('auth');
 Route::get('/wedding_record_archived/{wedding_id}', [WeddingFolderController::class, 'showByWeddingArchived'])->name('wedding_record.showByWeddingArchived')->middleware('auth');
-Route::get('/wedding', [WeddingFolderController::class, 'index'])->name('baptism.index')->middleware('auth');
+Route::get('/wedding', [WeddingFolderController::class, 'index'])->name('wedding.index')->middleware('auth');
+Route::get('/wedding/destroy/{id}', [WeddingFolderController::class, 'delete'])->name('wedding.destroy')->middleware('auth');
+Route::get('/wedding/status/{id}', [WeddingFolderController::class, 'status'])->name('wedding.status')->middleware('auth');
 Route::post('/add-year-wedding', [WeddingFolderController::class, 'addYear'])->name('add.year.wedding')->middleware('auth');
 Route::get('/weddingfolder/archive/{id}', [WeddingFolderController::class, 'archive'])->name('weddingfolder.archive')->middleware('auth');
 Route::get('/weddingfolder/archive/month/{year}', [WeddingFolderController::class, 'month'])->name('weddingfolder.archive.month')->middleware('auth');
@@ -108,6 +113,8 @@ Route::get('/funeralfolder/archive/month/{year}', [FuneralFolderController::clas
 
 //funeralRecord
 Route::get('/funeral_record/{funerals_id}', [FuneralRecordController::class, 'showByFuneral'])->name('funeral_record.showByFuneral')->middleware('auth');
+Route::get('/funeral_record/destroy/{id}', [FuneralRecordController::class, 'destroy'])->name('funeral_record.destroy')->middleware('auth');
+Route::get('/funeral_record/status/{id}', [FuneralRecordController::class, 'status'])->name('funeral_record.status')->middleware('auth');
 Route::get('/funeral_record_archived/{funerals_id}', [FuneralRecordController::class, 'showByFuneralArchived'])->name('funeral_record.showByFuneralArchived')->middleware('auth');
 Route::get('/funeral_record_archived/retrieve/{id}', [FuneralRecordController::class, 'retrieve'])->name('funeral_record.retrieve')->middleware('auth');
 Route::post('/funeral-record', [FuneralRecordController::class, 'store'])->name('funeral.record.store')->middleware('auth');

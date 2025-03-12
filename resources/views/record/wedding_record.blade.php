@@ -59,10 +59,11 @@
                                 <div class="form-group">
                                   <label for="weddingDate">Date of Wedding</label>
                                   <input type="date" class="form-control"name="wedding_date" id="weddingDate" />
+                                  <small id="dateError" class="text-danger"></small> <!-- Error Message -->
                                 </div>
                               </div>
                             </div>
-
+                          
                             <!-- Groom Information -->
                             <h5 class="fw-bold mb-3">Groom's Information</h5>
                             <div class="row">
@@ -370,10 +371,14 @@
                                                   onclick="editWeddingRecord({{ json_encode($record)}})">
                                                   <i class="fa fa-edit"></i>
                                               </button>
-                                              <button type="button" data-bs-toggle="tooltip" title="Remove"
-                                                  class="btn btn-link btn-danger" onclick="window.location.href='/weddingrecord/archive/{{ $record->id }}'">
-                                                  <i class="fas fa-archive"></i>
-                                              </button>
+                                              <button type="button" data-bs-toggle="tooltip" class="btn btn-link btn-danger btn-lg" title="Cancel"
+                                              onclick="confirmcancel({{ $record['id'] }})">
+                                              <i class="fas fa-times"></i>  <!-- Checkmark icon -->
+                                      </button>
+                                                    <button type="button" data-bs-toggle="tooltip" class="btn btn-link btn-secondary btn-lg" title="Mark as Done"
+                                              onclick="confirmcheck({{ $record['id'] }})">
+                                              <i class="fas fa-check"></i>  <!-- Checkmark icon -->
+                                      </button>
                                           </div>
                                       </td>
                                   </tr>
@@ -604,8 +609,69 @@
     </div>
   </div>
 </div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  $(document).ready(function() {
+      $('#weddingDate').on('change', function() {  // ✅ Corrected the ID
+          let selectedDate = $(this).val();
+          
+          if (!selectedDate) return; // Stop if no date selected
+  
+          $.ajax({
+              url: '/check-wedding-date', // ✅ Correct route
+              type: 'GET',
+              data: { date: selectedDate },
+              success: function(response) {
+                  if (response.isFull) {
+                      $('#weddingDate').css('border-color', 'red').css('color', 'red'); // ✅ Corrected the ID
+                      $('#dateError').text('This date is fully booked. Please select another date.');
+                  } else {
+                      $('#weddingDate').css('border-color', '').css('color', ''); // ✅ Reset if available
+                      $('#dateError').text('');
+                  }
+              },
+              error: function(xhr) {
+                  console.error("Error checking date:", xhr);
+              }
+          });
+      });
+  });
+  </script>
 
-
+<script>
+    function confirmcancel(id) {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "Do you want to Cancel the Wedding Book?",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, Cancel Book!',
+            cancelButtonText: 'No, cancel',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Redirect to the retrieval route
+                window.location.href = '/wedding/destroy/' + id;
+            }
+        });
+    }
+</script>
+<script>
+    function confirmcheck(id) {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "Do you want to move the data into Records?",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, move the data!',
+            cancelButtonText: 'No, cancel',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Redirect to the retrieval route
+                window.location.href = '/wedding/status/' + id;
+            }
+        });
+    }
+</script>
 <script>
    
     // Function to populate the update form
