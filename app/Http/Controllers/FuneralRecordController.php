@@ -52,6 +52,7 @@ class FuneralRecordController extends Controller
             'dob' => 'required|date',
             'dod' => 'required|date',
             'contact' => 'nullable|string|max:20',
+            'status' => "nullable",
         ]);
 
         
@@ -87,6 +88,7 @@ class FuneralRecordController extends Controller
             'dob' => $request->dob,
             'dod' => $request->dod,
             'contact' => $request->contact,
+            'status' => $request->status,
         ]);
 
         // Redirect with success message

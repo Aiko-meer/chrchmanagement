@@ -114,6 +114,7 @@ class WeddingFolderController extends Controller
             'bride_residence_city' => 'nullable|string|max:255',
             'bride_contact' => 'nullable|string|max:255',
             'document' => 'nullable|file|mimes:pdf,doc,docx,jpg,png|max:2048',
+            'status'=> 'nullable',
         ]);
 
         // Handle file upload if a document is provided
@@ -168,7 +169,7 @@ class WeddingFolderController extends Controller
             'bride_residence_city' => $request->bride_residence_city,
             'bride_contact' => $request->bride_contact,
             'document' => $documentPath,
-        ]);
+            'status' => $request->status,        ]);
 
         // Redirect or respond back with a success message
         return back()->with('success', 'Wedding record has been added successfully.');

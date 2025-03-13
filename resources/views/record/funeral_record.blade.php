@@ -51,6 +51,7 @@
                     
                     <input type="hidden" id="funeralYear" name="funeralYear" value="{{ $funeralYear }}" />
                     <input type="hidden" id="funeralID" name="funeral_id" value="{{ $funeralID }}" />
+                    <input type="hidden" id="status" name="status" value="0">
                     <div class="row">
                         
                         <div class="col-md-6">
