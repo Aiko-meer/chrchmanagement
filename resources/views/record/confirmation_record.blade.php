@@ -49,6 +49,7 @@
                           
                           <input type="hidden" id="confirmationYear" name="confirmationYear" value="{{ $confirmationYear }}" />
                           <input type="hidden" id="confirmationID" name="confirmation_id" value="{{ $confirmationID }}" />
+                          <input type="hidden" id="status" name="status" value="0">
 
                           <h5 class="fw-bold mb-3">Confirmation Record Details</h5>
                             <div class="row">

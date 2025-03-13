@@ -39,6 +39,8 @@ return new class extends Migration
             $table->string('godparent_middle_name')->nullable();
             $table->string('godparent_last_name');
             $table->timestamps();
+            $table->tinyInteger('status')->nullable();
+ 
         });
     }
 

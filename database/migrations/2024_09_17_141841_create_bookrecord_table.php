@@ -41,6 +41,7 @@ return new class extends Migration
             $table->string('residence_province'); // Residence Province
             $table->string('residence_city');    // Residence Municipality/City
             $table->timestamps();
+            $table->tinyInteger('status')->nullable();
         });
     }
 

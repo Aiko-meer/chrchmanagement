@@ -23,6 +23,7 @@ return new class extends Migration
             $table->date('dod');  //date of death
             $table->string('contact');
             $table->timestamps();
+            $table->tinyInteger('status')->nullable();
         });
     }
 

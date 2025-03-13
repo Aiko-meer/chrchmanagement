@@ -67,6 +67,7 @@ class ConfirmationRecordController extends Controller
             'godparentFirstName' => 'required|string',
             'godparentMiddleName' => 'nullable|string',
             'godparentLastName' => 'required|string',
+            'status' => 'nullable',
            
         ]);
 
@@ -116,6 +117,7 @@ class ConfirmationRecordController extends Controller
             'godparent_first_name' => $validatedData['godparentFirstName'],
             'godparent_middle_name' => $validatedData['godparentMiddleName'],
             'godparent_last_name' => $validatedData['godparentLastName'],
+            'status' => $validatedData['status'],
             
         ]);
 

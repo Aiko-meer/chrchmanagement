@@ -474,6 +474,7 @@ $(document).ready(function() {
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="childFirstName">First Name</label>
+                                        <input type="text" class="form-control" id="childFirstName" name="status" value="0" placeholder="Enter First Name">
                                         <input type="text" class="form-control" id="childFirstName" name="childFirstName" placeholder="Enter First Name"required>
                                     </div>
                                 </div>

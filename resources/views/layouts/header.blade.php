@@ -182,7 +182,7 @@
                 <li class="nav-item {{ Request::is('managebook') ? 'active' : '' }}">
                   <a href="/managebook">
                     <i class="fas fa-archive"></i>
-                    <p>Church Book</p>
+                    <p>Church Record</p>
                     
                   </a>
                 </li>
@@ -195,7 +195,7 @@
                   <li class="nav-item {{ Request::is('baptism', 'confirmation', 'wedding', 'funeral') ? 'active' : '' }}">
                       <a data-bs-toggle="collapse" href="#Church">
                           <i class="fas fa-file-alt"></i>
-                          <p>Manage Book</p>
+                          <p>Manage Booking</p>
                           <span class="caret"></span>
                       </a>
                   <div class="collapse {{ Request::is('baptism', 'confirmation', 'wedding', 'funeral') ? 'show' : '' }}" id="Church">

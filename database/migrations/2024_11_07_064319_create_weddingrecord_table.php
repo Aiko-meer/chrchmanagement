@@ -38,6 +38,7 @@ return new class extends Migration
             $table->string('bride_contact');
             $table->string('document')->nullable();
             $table->timestamps();
+            $table->tinyInteger('status')->nullable();
         });
     }
 

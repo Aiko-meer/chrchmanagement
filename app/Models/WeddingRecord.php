@@ -37,6 +37,7 @@ class WeddingRecord extends Model
         'bride_residence_city',
         'bride_contact',
         'document',
+       
         
     ];
 }

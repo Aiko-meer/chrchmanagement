@@ -21,6 +21,7 @@ return new class extends Migration
             $table->date('payment_date'); // Payment Date
             $table->time('payment_time');
             $table->timestamps();
+            
         });
     }
 
