@@ -2,158 +2,148 @@
 @section('content')
 
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const godparentsContainer = document.getElementById("godparents-container");
-        const addGodparentBtn = document.getElementById("add-godparent-btn");
+  document.addEventListener("DOMContentLoaded", function () {
+      const godparentsContainer = document.getElementById("godparents-container");
+      const addGodparentBtn = document.getElementById("add-godparent-btn");
 
-        // Function to create a new godparent entry
-        function createGodparentEntry() {
-            const godparentEntry = document.createElement("div");
-            godparentEntry.classList.add("godparent-entry");
+      // Clear container to ensure it starts empty
+      godparentsContainer.innerHTML = '';
 
-            godparentEntry.innerHTML = `
-                <div class="row">
-                  <!-- First Name -->
+      // Function to create a new godparent entry
+      function createGodparentEntry() {
+          const godparentEntry = document.createElement("div");
+          godparentEntry.classList.add("godparent-entry");
+
+          godparentEntry.innerHTML = `
+              <div class="row">
                   <div class="col-md-4">
-                    <div class="form-group">
-                      <label for="godparentFirstName">First Name</label>
-                      <input type="text" class="form-control" name="godparentFirstName[]" placeholder="Enter First Name" />
-                    </div>
+                      <div class="form-group">
+                          <label>First Name</label>
+                          <input type="text" class="form-control" name="godparentFirstName[]" placeholder="Enter First Name" />
+                      </div>
                   </div>
-
-                  <!-- Middle Name -->
                   <div class="col-md-4">
-                    <div class="form-group">
-                      <label for="godparentMiddleName">Middle Name</label>
-                      <input type="text" class="form-control" name="godparentMiddleName[]" placeholder="Enter Middle Name" />
-                    </div>
+                      <div class="form-group">
+                          <label>Middle Name</label>
+                          <input type="text" class="form-control" name="godparentMiddleName[]" placeholder="Enter Middle Name" />
+                      </div>
                   </div>
-
-                  <!-- Last Name -->
                   <div class="col-md-4">
-                    <div class="form-group">
-                      <label for="godparentLastName">Last Name</label>
-                      <input type="text" class="form-control" name="godparentLastName[]" placeholder="Enter Last Name" />
-                    </div>
+                      <div class="form-group">
+                          <label>Last Name</label>
+                          <input type="text" class="form-control" name="godparentLastName[]" placeholder="Enter Last Name" />
+                      </div>
                   </div>
-
-                  <!-- Purok No. -->
-                  <div class="col-md-6">
-                    <div class="form-group">
-                      <label for="godparentPurok">Purok No.</label>
-                      <input type="text" class="form-control" name="godparentPurok[]" placeholder="Enter Purok No." />
-                    </div>
-                  </div>
-
-                  <!-- Street Address -->
-                  <div class="col-md-6">
-                    <div class="form-group">
-                      <label for="godparentStreetAddress">Street Address</label>
-                      <input type="text" class="form-control" name="godparentStreetAddress[]" placeholder="Enter Street Address" />
-                    </div>
-                  </div>
-
-                  <!-- Barangay -->
-                  <div class="col-md-6">
-                    <div class="form-group">
-                      <label for="godparentBarangay">Barangay</label>
-                      <input type="text" class="form-control" name="godparentBarangay[]" placeholder="Enter Barangay" />
-                    </div>
-                  </div>
-
-                 
-
-                  <!-- Province Dropdown -->
                   <div class="col-md-6">
                       <div class="form-group">
-                          <label for="godparentProvince">Province</label>
+                          <label>Purok No.</label>
+                          <input type="text" class="form-control" name="godparentPurok[]" placeholder="Enter Purok No." />
+                      </div>
+                  </div>
+                  <div class="col-md-6">
+                      <div class="form-group">
+                          <label>Street Address</label>
+                          <input type="text" class="form-control" name="godparentStreetAddress[]" placeholder="Enter Street Address" />
+                      </div>
+                  </div>
+                  <div class="col-md-6">
+                      <div class="form-group">
+                          <label>Barangay</label>
+                          <input type="text" class="form-control" name="godparentBarangay[]" placeholder="Enter Barangay" />
+                      </div>
+                  </div>
+                  <div class="col-md-6">
+                      <div class="form-group">
+                          <label>Province</label>
                           <select class="form-control godparentProvince" name="godparentProvince[]">
                               <option value="">Select Province</option>
                           </select>
                       </div>
                   </div>
-                   <div class="col-md-6">
+                  <div class="col-md-6">
                       <div class="form-group">
-                          <label for="godparentCity">Municipality/City</label>
+                          <label>Municipality/City</label>
                           <select class="form-control godparentCity" name="godparentCity[]">
                               <option value="">Select Municipality/City</option>
                           </select>
                       </div>
                   </div>
-
-                  <!-- Remove Button -->
                   <div class="col-md-12">
-                    <button type="button" class="btn btn-danger remove-godparent">Remove</button>
+                      <button type="button" class="btn btn-danger remove-godparent">Remove</button>
                   </div>
-                </div>
-                <hr />
-            `;
+              </div>
+              <hr />
+          `;
 
-            // Add the remove event listener for the new godparent entry
-            godparentEntry.querySelector(".remove-godparent").addEventListener("click", function () {
-                godparentEntry.remove();
-            });
+          // Add event listener for removing a godparent entry
+          godparentEntry.querySelector(".remove-godparent").addEventListener("click", function () {
+              godparentEntry.remove();
+          });
 
-            return godparentEntry;
-        }
+          return godparentEntry;
+      }
 
-        // Add the first godparent entry on page load
-        addGodparentBtn.addEventListener("click", function () {
-            const newGodparentEntry = createGodparentEntry();
-            godparentsContainer.appendChild(newGodparentEntry);
-            populateProvinces(newGodparentEntry.querySelector('.godparentProvince'));
-        });
+      // Add new godparent entry when the button is clicked
+      addGodparentBtn.addEventListener("click", function () {
+          const newGodparentEntry = createGodparentEntry();
+          godparentsContainer.appendChild(newGodparentEntry);
 
-        // Populate provinces for a given select element
-        function populateProvinces(provinceSelector) {
-        fetch('https://psgc.gitlab.io/api/provinces/')
-            .then(response => response.json())
-            .then(data => {
-                let provinceOptions = '<option value="">Select Province</option>';
-                data.forEach(function (province) {
-                    provinceOptions += `<option value="${province.name}">${province.name}</option>`;
-                });
-                $(provinceSelector).html(provinceOptions);
-            });
-    }
+          // Populate provinces for the new entry
+          populateProvinces(newGodparentEntry.querySelector('.godparentProvince'));
+      });
 
-    // Populate cities based on the selected province
-    function populateCities(provinceSelector, citySelector) {
-        const selectedProvinceName = $(provinceSelector).val();
-        if (selectedProvinceName) {
-            // Get the province code based on the selected name
-            fetch(`https://psgc.gitlab.io/api/provinces/`)
-                .then(response => response.json())
-                .then(data => {
-                    const province = data.find(p => p.name === selectedProvinceName);
-                    if (province) {
-                        return fetch(`https://psgc.gitlab.io/api/provinces/${province.code}/cities-municipalities/`);
-                    } else {
-                        throw new Error('Province not found');
-                    }
-                })
-                .then(response => response.json())
-                .then(data => {
-                    let cityOptions = '<option value="">Select City/Municipality</option>';
-                    data.forEach(function (city) {
-                        cityOptions += `<option value="${city.name}">${city.name}</option>`;
-                    });
-                    $(citySelector).html(cityOptions);
-                });
-        } else {
-            $(citySelector).html('<option value="">Select City/Municipality</option>');
-        }
-    }
+      // Populate provinces dynamically
+      function populateProvinces(provinceSelector) {
+          fetch('https://psgc.gitlab.io/api/provinces/')
+              .then(response => response.json())
+              .then(data => {
+                  let provinceOptions = '<option value="">Select Province</option>';
+                  data.forEach(province => {
+                      provinceOptions += `<option value="${province.name}">${province.name}</option>`;
+                  });
+                  provinceSelector.innerHTML = provinceOptions;
+              })
+              .catch(error => console.error('Error loading provinces:', error));
+      }
 
-    // Event listener for province selection change
-    godparentsContainer.addEventListener("change", function (event) {
-        if (event.target.classList.contains('godparentProvince')) {
-            const citySelector = $(event.target).closest('.row').find('.godparentCity');
-            populateCities(event.target, citySelector);
-        }
-    });
-});
+      // Populate cities dynamically when a province is selected
+      function populateCities(provinceSelector, citySelector) {
+          const selectedProvinceName = provinceSelector.value;
+          if (selectedProvinceName) {
+              fetch('https://psgc.gitlab.io/api/provinces/')
+                  .then(response => response.json())
+                  .then(data => {
+                      const province = data.find(p => p.name === selectedProvinceName);
+                      if (province) {
+                          return fetch(`https://psgc.gitlab.io/api/provinces/${province.code}/cities-municipalities/`);
+                      } else {
+                          throw new Error('Province not found');
+                      }
+                  })
+                  .then(response => response.json())
+                  .then(data => {
+                      let cityOptions = '<option value="">Select City/Municipality</option>';
+                      data.forEach(city => {
+                          cityOptions += `<option value="${city.name}">${city.name}</option>`;
+                      });
+                      citySelector.innerHTML = cityOptions;
+                  })
+                  .catch(error => console.error('Error loading cities:', error));
+          } else {
+              citySelector.innerHTML = '<option value="">Select City/Municipality</option>';
+          }
+      }
+
+      // Handle province selection change only when triggered by the user
+      godparentsContainer.addEventListener("change", function (event) {
+          if (event.isTrusted && event.target.classList.contains('godparentProvince')) {
+              const citySelector = event.target.closest('.row').querySelector('.godparentCity');
+              populateCities(event.target, citySelector);
+          }
+      });
+  });
 </script>
+
 <script>
     // Function to get the ID from the URL
     function getIdFromUrl() {
