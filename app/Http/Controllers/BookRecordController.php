@@ -62,16 +62,6 @@ class BookRecordController extends Controller
         // Convert baptism date to Y-m-d format
         $baptismDate = Carbon::parse($validated['baptismDate'])->format('Y-m-d');
     
-        // Count existing bookings for the date
-        $existingBookings = BookRecord::whereDate('baptism_date', $baptismDate)->count();
-    
-        // **Check if booking limit reached**
-        if ($existingBookings >= $MAX_BOOKINGS_PER_DAY) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Sorry, the maximum number of baptisms for this date has been reached. Please choose another date.'
-            ], Response::HTTP_BAD_REQUEST); // Uses Symfony HTTP status codes
-        }
         
         
     

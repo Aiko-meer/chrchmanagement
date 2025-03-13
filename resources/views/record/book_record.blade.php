@@ -299,80 +299,61 @@
     
 </script>
 <script>
-$(document).ready(function() {
   $(document).ready(function() {
-  $('#baptismRecordForm').on('submit', function(e) {
-    e.preventDefault(); // Prevent default form submission
-
-    const submitButton = $(this).find('button[type="submit"]');
-    submitButton.prop('disabled', true).text('Submitting...');
-
-    $('.form-error').remove(); // Clear previous error messages
-
-    $.ajax({
-        type: 'POST',
-        url: $(this).attr('action'),
-        data: $(this).serialize(),
-        success: function(response) {
-    console.log("✅ Success Response:", response); // Debugging
-
-    if (response.success) {
-        Swal.fire({
-            title: 'Success!',
-            text: response.message,
-            icon: 'success',
-            confirmButtonText: 'Okay'
-        }).then(() => {
-            location.reload(); // Reload the page after closing the alert
-        });
-    } else {
-        // If success = false, handle it as an error
-        Swal.fire({
-            title: 'Limit Reached!',
-            text: response.message,
-            icon: 'warning',
-            confirmButtonText: 'Okay'
-        });
-    }
-},
-        error: function(xhr) {
-    submitButton.prop('disabled', false).text('Submit');
-
-    console.log("❌ Error Response:", xhr); 
-    console.log("❌ Status Code:", xhr.status); // Log status code
-    console.log("❌ Response JSON:", xhr.responseJSON); // Log full response
-
-    if (xhr.status === 400) {
-        Swal.fire({
-            title: 'Limit Reached!',
-            text: xhr.responseJSON?.message || 'Sorry, no more bookings allowed for this date.',
-            icon: 'warning',
-            confirmButtonText: 'Okay'
-        });
-    } 
-    else if (xhr.status === 422) {
-        const errors = xhr.responseJSON.errors;
-        for (const field in errors) {
-            const errorMsg = `<div class="form-error text-danger">${errors[field][0]}</div>`;
-            $(`#${field}`).after(errorMsg);
-        }
-    } 
-    else {
-        Swal.fire({
-            title: 'Error!',
-            text: 'An error occurred. Please try again later.',
-            icon: 'error',
-            confirmButtonText: 'Okay'
-        });
-    }
-}
-
-    });
+      $('#baptismRecordForm').on('submit', function(e) {
+          e.preventDefault(); // Prevent default form submission behavior
+  
+          const submitButton = $(this).find('button[type="submit"]');
+          submitButton.prop('disabled', true).text('Submitting...');
+  
+          $('.form-error').remove(); // Clear previous error messages
+  
+          $.ajax({
+              type: 'POST',
+              url: $(this).attr('action'),
+              data: $(this).serialize(),
+              success: function(response) {
+                  console.log(response); // Debugging
+                  if (response.success) {
+                      Swal.fire({
+                          title: 'Success!',
+                          text: response.message,
+                          icon: 'success',
+                          confirmButtonText: 'Okay'
+                      }).then(() => {
+                          location.reload(); // Reload the page after closing the alert
+                      });
+                  } else {
+                      Swal.fire({
+                          title: 'Error!',
+                          text: 'Something went wrong. Please try again.',
+                          icon: 'error',
+                          confirmButtonText: 'Okay'
+                      });
+                  }
+              },
+              error: function(xhr) {
+                  submitButton.prop('disabled', false).text('Submit');
+  
+                  if (xhr.status === 422) {
+                      const errors = xhr.responseJSON.errors;
+                      for (const field in errors) {
+                          const errorMsg = `<div class="form-error text-danger">${errors[field][0]}</div>`;
+                          $(`#${field}`).after(errorMsg); // Display error after the field
+                      }
+                  } else {
+                      Swal.fire({
+                          title: 'Error!',
+                          text: 'An error occurred. Please try again later.',
+                          icon: 'error',
+                          confirmButtonText: 'Okay'
+                      });
+                  }
+              }
+          });
+      });
   });
-});
-
-}
-</script>
+  </script>
 <div class="container">
     <div class="page-inner">
         <div class="page-header">
