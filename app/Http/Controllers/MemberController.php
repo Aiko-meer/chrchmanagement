@@ -88,7 +88,31 @@ class MemberController extends Controller
 
 
 
-    }   
+    }
+    
+    public function delete(Request $request)
+    {
+       
+        $validated = $request->validate([
+            'first_name' => 'required',
+        ]);
+
+        
+    
+        // Find the ministry by first_name instead of ID
+        $ministry = Ministry::where('ministry', $request->first_name)->firstOrFail();
+
+        // Delete the record
+        $ministry->delete();
+
+        $members = Member::where('archive', 0)->get();
+        $ministries = Ministry::all(); // Fetches all records
+                // Redirect using the ministry name instead of ID
+        return view('members.member', compact('members','ministries'));
+
+
+
+    }
     
     public function update(Request $request, $id)
     { 

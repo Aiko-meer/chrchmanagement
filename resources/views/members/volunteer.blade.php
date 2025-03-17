@@ -48,7 +48,68 @@
             </ul>
         </div>
 
-
+        <div class="modal fade" id="formModal1" tabindex="-1" aria-labelledby="formModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="formModalLabel">Collection Record</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <div class="container">
+                  <div class="page-inner">
+                    <div class="row">
+                      <div class="col-md-12">
+                        <div class="card">
+                          <div class="card-body">
+        
+                            <!-- Acolytes Information -->
+                            <h5 class="fw-bold mb-3">Are you Sure you want to delete?</h5>
+                            <form action="{{ route('member.destroy') }}" method="POST">
+                            @csrf
+                            <div id="acolytesContainer">
+                              <!-- Default Acolyte -->
+                              <div class="acolyte-group">
+                                <div class="row">
+                                  <div class="col-md-4">
+                                    <div class="form-group">
+                                      <label for="acolyteFirstName">role {{$min}}</label>
+                                      <input type="text" class="form-control" id="firstName" name="first_name" value="{{$min}}" hidden />
+        
+                                    </div>
+                                  </div>
+                                 
+                                 
+                                </div>
+                                <hr />
+                              </div>
+                            </div>
+                        
+        
+                            <!-- Date and Time Schedule -->
+                            
+        
+                            <!-- In-Kind Collection -->
+                          
+        
+                            <!-- Money Collection -->
+                          
+        
+                          </div>
+                          <div class="card-action">
+                            <button class="btn btn-primary">Submit</button>
+                            <button class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
+                          </div>
+                        </form>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
         <div class="modal fade" id="formModal" tabindex="-1" aria-labelledby="newMemberModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
@@ -357,6 +418,15 @@
                                 <i class="fa fa-plus"></i>
                                New {{$min}}
                                 </button>
+                                <button
+                                class="btn btn-danger btn-round ms-2"
+                                data-bs-toggle="modal" data-bs-target="#formModal1"
+                                >
+                                <i class="fa fa-times"></i>
+                              Delete {{$min}}
+                                </button>
+                                
+                            
                             </div>
                         </div>
                         <div class="card-body">
@@ -438,6 +508,39 @@
                 
             </div>
     </div>
+    <script>
+      function confirmcancel(id) {
+    console.log("Cancel Button Clicked with ID:", id); // Debugging
+
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "Do you want to Cancel the Baptism Book?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, Cancel Book!',
+        cancelButtonText: 'No, keep it',
+    }).then((result) => {
+        if (result.isConfirmed) {
+            console.log("Confirmed, redirecting..."); // Debugging
+            window.location.href = '/member/ministry/destroy/' + id;
+        }
+    });
+}
+
+      </script>
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+      <!-- Bootstrap Bundle with Popper.js (required for tooltips) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+      <script>
+        document.addEventListener("DOMContentLoaded", function () {
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl);
+    });
+});
+
+      </script>
 </div>
 
 

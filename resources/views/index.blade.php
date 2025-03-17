@@ -75,7 +75,7 @@
                     </div>
                     <div class="col col-stats ms-3 ms-sm-0">
                     <div class="numbers">
-                        <p class="card-category">Members</p>
+                        <p class="card-category">Ministry</p>
                         <h4 class="card-title">{{ $memberRecordsCount }}</h4>
                     </div>
                     </div>
@@ -84,29 +84,7 @@
             </div>
             </a>
         </div>
-        <div class="col-sm-6 col-md-4">
-        <a href="/volunteer" class="text-decoration-none">
-            <div class="card card-stats card-round">
-                <div class="card-body">
-                <div class="row align-items-center">
-                    <div class="col-icon">
-                    <div
-                        class="icon-big text-center icon-secondary bubble-shadow-small"
-                    >
-                        <i class="fas fa-users"></i>
-                    </div>
-                    </div>
-                    <div class="col col-stats ms-3 ms-sm-0">
-                    <div class="numbers">
-                        <p class="card-category">Volunteers</p>
-                        <h4 class="card-title">{{ $volunteerRecordsCount }}</h4>
-                    </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        </a>
-        </div>
+        
         
         <div class="col-sm-6 col-md-4">
         <a href="/donation" class="text-decoration-none">

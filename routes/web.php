@@ -125,6 +125,7 @@ Route::get('/funeralrecord/archive/{id}', [FuneralRecordController::class, 'arch
 Route::get('/member', [MemberController::class, 'index'])->name('members.index')->middleware('auth');
 Route::post('/member', [MemberController::class, 'store'])->name('member.store')->middleware('auth');
 Route::post('/member/ministry', [MemberController::class, 'ministry'])->name('member.ministry')->middleware('auth');
+Route::post('/member/ministry/destroy', [MemberController::class, 'delete'])->name('member.destroy')->middleware('auth');
 Route::resource('members', MemberController::class)->middleware('auth');
 Route::put('/members/{member}', [MemberController::class, 'update'])->name('members.update')->middleware('auth');
 Route::get('/members/archive/{id}', [MemberController::class, 'archive'])->name('members.archive')->middleware('auth');
