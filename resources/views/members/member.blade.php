@@ -1,4 +1,4 @@
-@extends('layouts.header')
+@extends('layouts.ministry')
 @section('content')
 
 <script>
@@ -30,7 +30,7 @@
 <div class="container">
     <div class="page-inner">
         <div class="page-header">
-            <h3 class="fw-bold mb-3">Members</h3>
+            <h3 class="fw-bold mb-3">Ministry</h3>
             <ul class="breadcrumbs mb-3">
             <li class="nav-home">
                 <a href="/">
@@ -41,7 +41,7 @@
                 <i class="icon-arrow-right"></i>
             </li>
             <li class="nav-item">
-                <a href="/member">Member</a>
+                <a href="/member">Ministry</a>
             </li>
           
             
@@ -55,7 +55,7 @@
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="newMemberModalLabel">New Member Registration Form</h5>
+        <h5 class="modal-title" id="newMemberModalLabel">New Ministry Registration Form</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
@@ -128,8 +128,8 @@
                     </div>
                     <div class="col-md-4">
                       <div class="form-group">
-                        <label for="position">Position</label>
-                        <input type="text" class="form-control" id="position" name="position" placeholder="Enter Position" />
+                        <label for="position">Ministry Role</label>
+                        <input type="text" class="form-control" id="position" name="position" placeholder="Enter Ministry Role" />
                       </div>
                     </div>
                   </div>
@@ -348,14 +348,22 @@
                     <div class="card">
                         <div class="card-header">
                             <div class="d-flex align-items-center">
-                                <h4 class="card-title">Members</h4>
+                                <h4 class="card-title">Ministry</h4>
                                 <button
                                 class="btn btn-primary btn-round ms-auto"
                                 data-bs-toggle="modal" data-bs-target="#formModal"
                                 >
                                 <i class="fa fa-plus"></i>
-                                New Member
+                                New Ministry
                                 </button>
+                                <button
+                                class="btn btn-primary btn-round "
+                                data-bs-toggle="modal" data-bs-target="#formModal1"
+                                >
+                                <i class="fa fa-plus"></i>
+                                New Ministry Role
+                                </button>
+                                
                             </div>
                         </div>
                         <div class="card-body">
@@ -370,7 +378,7 @@
                             <thead>
                                 <tr>
                                 <th style="width: 50%"> Full Name </th>
-                                <th style="width: 20%">Position</th>
+                                <th style="width: 20%">Ministry Role</th>
                                 <th style="width: 20%">Status</th>
                                 
                                 <th style="width: 10%">Action</th>
@@ -446,7 +454,61 @@
                 
             </div>
     </div>
+    <div class="modal fade" id="formModal1" tabindex="-1" aria-labelledby="newMemberModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="newMemberModalLabel">New Ministry  Folder</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="container">
+              <div class="page-inner">
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="card">
+                     
+                      <form action="{{ route('member.ministry') }}" method="POST" enctype="multipart/form-data">
+                      @csrf
+                      <div class="card-body">
+                      <input type="hidden" id="status" name="status" value="Active" />
+                      
+    
+                      <!-- Personal Information -->
+                      <h5 class="fw-bold mb-3">Ministry Name</h5>
+                      <div class="row">
+                        <div class="col-md-4">
+                          <div class="form-group">
+                            <label for="firstName">Ministry  Name:</label>
+                            <input type="text" class="form-control" id="firstName" name="first_name" placeholder="Enter Minstry Name" required />
+                          </div>
+                        </div>
+                       
+                      </div>
+    
+                      <!-- Contact Information -->
+                     
+    
+                      <!-- Residence Address -->
+                   
+                      <!-- Submit and Cancel buttons -->
+                      <div class="form-group mt-4">
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
+                      </div>
+                    </form>
+                    </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
 </div>
+
+
 
 
 

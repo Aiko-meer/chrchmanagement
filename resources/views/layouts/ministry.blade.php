@@ -238,7 +238,13 @@
                                 <span class="sub-item">Ministry</span>
                             </a>
                         </li>
-                       
+                        @foreach($ministries as $ministry)
+                        <li class="{{ Request::is( $ministry->ministry) ? 'active' : '' }}">
+                          <a href="/volunteer/{{ $ministry->ministry }}">
+                            <span class="sub-item">{{ $ministry->ministry }}</span>
+                        </a> <!-- Assuming 'name' is a column in the ministries table -->
+                        </li>
+                    @endforeach
                     
                     </ul>
                 </div>

@@ -19,6 +19,25 @@ class CollectionController extends Controller
         return view('finances.collection', compact('acolytes','collections','inkinds'));
     }
 
+    public function print(Request $request)
+{  
+    $validatedData = $request->validate([
+        'yearmonth' => 'required',
+    ]);
+    $acolytes = Acolyte::all();
+    $yearMonth = explode('-', $validatedData['yearmonth']); // Split "YYYY-MM"
+    $year = $yearMonth[0]; // Get the year
+    $month = $yearMonth[1]; // Get the month
+    
+    $collections = CollectionRecord::whereYear('created_at', $year)
+                                   ->whereMonth('created_at', $month)
+                                   ->get();
+    
+
+    return view('finances.collection_print', compact('collections','acolytes')); // ✅ Correct way
+}
+
+
     public function info($id)
     {  
         $collections = CollectionRecord::findOrFail($id);

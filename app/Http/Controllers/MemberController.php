@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Member;
+use App\Models\Ministry;
 
 class MemberController extends Controller
 {
@@ -11,7 +12,14 @@ class MemberController extends Controller
     public function index()
     {
         $members = Member::where('archive', 0)->get();
-        return view('members.member', compact('members'));
+        $ministries = Ministry::all(); // Fetches all records
+        return view('members.member', compact('members','ministries'));
+    }
+    public function header()
+    {
+       
+        $ministries = Ministry::all(); // Fetches all records
+        return view('layout.header', compact('ministries'));
     }
 
     public function store(Request $request)
@@ -63,6 +71,25 @@ class MemberController extends Controller
     
         return redirect()->back()->with('success', 'Member registered successfully');
     }
+
+    public function ministry(Request $request)
+    {
+        $validated = $request->validate([
+            'first_name' => 'required',
+        ]);
+    
+        // Create a new ministry and store it in a variable
+        $ministry = Ministry::create([
+            'ministry' => $request->first_name,
+        ]);
+    
+        // Redirect using the ministry name instead of ID
+        return redirect()->back()->with('success', 'Member registered successfully');
+
+
+
+    }   
+    
     public function update(Request $request, $id)
     { 
         

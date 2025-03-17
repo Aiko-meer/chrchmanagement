@@ -1,4 +1,4 @@
-@extends('layouts.header')
+@extends('layouts.ministry')
 @section('content')
 
 <script>
@@ -28,7 +28,7 @@
 <div class="container">
     <div class="page-inner">
         <div class="page-header">
-            <h3 class="fw-bold mb-3">Volunteers</h3>
+            <h3 class="fw-bold mb-3">{{$min}}</h3>
             <ul class="breadcrumbs mb-3">
             <li class="nav-home">
                 <a href="/">
@@ -39,7 +39,7 @@
                 <i class="icon-arrow-right"></i>
             </li>
             <li class="nav-item">
-                <a href="/volunteer">Volunteers</a>
+                <a href="/volunteer">{{$min}}</a>
             </li>
           
             
@@ -53,7 +53,7 @@
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="newMemberModalLabel">New Volunteer Registration Form</h5>
+        <h5 class="modal-title" id="newMemberModalLabel">New {{$min}} Registration Form</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
@@ -125,12 +125,7 @@
                               </select>
                             </div>
                           </div>
-                          <div class="col-md-4">
-                            <div class="form-group">
-                              <label for="position">Position</label>
-                              <input type="text" class="form-control" id="position" name="position" placeholder="Enter Position" />
-                            </div>
-                          </div>
+                        
                         </div>
 
                         <!-- Contact Information -->
@@ -354,13 +349,13 @@
                     <div class="card">
                         <div class="card-header">
                             <div class="d-flex align-items-center">
-                                <h4 class="card-title">Volunteers</h4>
+                                <h4 class="card-title">{{$min}}</h4>
                                 <button
                                 class="btn btn-primary btn-round ms-auto"
                                 data-bs-toggle="modal" data-bs-target="#formModal"
                                 >
                                 <i class="fa fa-plus"></i>
-                               New Volunteer
+                               New {{$min}}
                                 </button>
                             </div>
                         </div>
@@ -372,7 +367,7 @@
                               <thead>
                                   <tr>
                                       <th style="width: 50%"> Full Name </th>
-                                      <th style="width: 20%">Position</th>
+                            
                                       <th style="width: 20%">Status</th>
                                       <th style="width: 10%">Action</th>
                                   </tr>
@@ -380,7 +375,7 @@
                               <tfoot>
                                   <tr>
                                       <th style="width: 50%"> Full Name </th>
-                                      <th style="width: 20%">Position</th>
+                                      
                                       <th style="width: 20%">Status</th>
                                       <th style="width: 10%">Action</th>
                                   </tr>
@@ -389,7 +384,7 @@
                                   @foreach ($volunteers as $volunteer)
                                       <tr>
                                           <td>{{ $volunteer->first_name }} {{ $volunteer->middle_name }} {{ $volunteer->last_name }}</td>
-                                          <td>{{ $volunteer->position }}</td>
+                                        
                                           <td>{{ $volunteer->status }}</td>
                                           <td>
                                               <div class="form-button-action">

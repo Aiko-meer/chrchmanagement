@@ -23,6 +23,60 @@
             </ul>
         </div>
 
+        <div class="modal fade" id="formModal1" tabindex="-1" aria-labelledby="formModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="formModalLabel">Donation Record</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <div class="container">
+                  <div class="page-inner">
+                    <div class="row">
+                      <div class="col-md-12">
+                        <div class="card">
+                          <div class="card-body">
+        
+                            <!-- Acolytes Information -->
+                            <h5 class="fw-bold mb-3">Print Record By Month</h5>
+                            <form action="{{ route('payment.print') }}" method="POST">
+                            @csrf
+                            <div id="acolytesContainer">
+                              <!-- Default Acolyte -->
+                              <div class="acolyte-group">
+                                <div class="row">
+                                  <div class="col-md-4">
+                                    <div class="form-group">
+                                      <label for="acolyteFirstName">Year and Month</label>
+                                      <input type="month" class="form-control" name="yearmonth" />
+        
+                                    </div>
+                                  </div>
+                                 
+                                 
+                                </div>
+                                <hr />
+                              </div>
+                            </div>
+              
+                          </div>
+                          <div class="card-action">
+                            <button class="btn btn-primary">Submit</button>
+                            <button class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
+                          </div>
+                        </form>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
         <div class="modal fade" id="paymentModal" tabindex="-1" aria-labelledby="paymentModalLabel" aria-hidden="true">
           <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -128,6 +182,13 @@
                                 <i class="fa fa-plus"></i>
                                 Payment record
                                 </button>
+                                <button
+                                class="btn btn-primary btn-round ms-2"
+                                data-bs-toggle="modal" data-bs-target="#formModal1"
+                                >
+                                <i class="fa fa-plus"></i>
+                                Print Record By Month
+                                </button>
                             </div>
                         </div>
                         <div class="card-body">
@@ -137,7 +198,7 @@
                         <div class="table-responsive">
                           <table id="add-row" class="display table table-striped table-hover">
                               <thead>
-                                  <tr>
+                                  <tr>pa
                                       <th style="width: 5%">#</th>
                                       <th style="width: 15%">Name</th>
                                       <th style="width: 40%">Reason of Payment</th>

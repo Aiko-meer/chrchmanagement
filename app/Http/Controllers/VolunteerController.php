@@ -4,13 +4,25 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Volunteer;
+use App\Models\Member;
+use App\Models\Ministry;
 
 class VolunteerController extends Controller
 {
-    public function index()
+        public function index($ministry)
+        {
+            $volunteers = Member::where('Position', $ministry)
+            ->where('archive', 0)
+            ->get();
+            $ministries = Ministry::all(); // Fetches all records
+            $min = $ministry;
+            return view('members.volunteer', compact('volunteers','ministries','min'));
+        }
+    public function header()
     {
-        $volunteers = Volunteer::where('archive', 0)->get();
-        return view('members.volunteer', compact('volunteers'));
+       
+        $ministries = Ministry::all(); // Fetches all records
+        return view('layout.header', compact('ministries'));
     }
 
     public function store(Request $request)
@@ -90,7 +102,7 @@ class VolunteerController extends Controller
             return redirect()->back()->withErrors($e->validator)->withInput();
         }
 
-        $volunteer = Volunteer::findOrFail($id);
+        $volunteer = Members::findOrFail($id);
 
         \Log::info("Volunteer before update: ", $volunteer->toArray());
 

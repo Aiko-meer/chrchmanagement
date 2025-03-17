@@ -124,12 +124,13 @@ Route::get('/funeralrecord/archive/{id}', [FuneralRecordController::class, 'arch
 //members
 Route::get('/member', [MemberController::class, 'index'])->name('members.index')->middleware('auth');
 Route::post('/member', [MemberController::class, 'store'])->name('member.store')->middleware('auth');
+Route::post('/member/ministry', [MemberController::class, 'ministry'])->name('member.ministry')->middleware('auth');
 Route::resource('members', MemberController::class)->middleware('auth');
 Route::put('/members/{member}', [MemberController::class, 'update'])->name('members.update')->middleware('auth');
 Route::get('/members/archive/{id}', [MemberController::class, 'archive'])->name('members.archive')->middleware('auth');
 Route::get('/members/archive/retrieve/{id}', [MemberController::class, 'retrieve'])->name('members.retrieve')->middleware('auth');
 //volunteer
-Route::get('/volunteer', [VolunteerController::class, 'index'])->name('volunteers.index')->middleware('auth');
+Route::get('/volunteer/{ministry}', [VolunteerController::class, 'index'])->name('volunteers.index')->middleware('auth');
 Route::post('/volunteer', [VolunteerController::class, 'store'])->name('volunteer.store')->middleware('auth');
 Route::resource('volunteers', VolunteerController::class)->middleware('auth')->middleware('auth');
 Route::put('/volunteers/{volunteer}', [VolunteerController::class, 'update'])->name('volunteers.update')->middleware('auth');
@@ -139,10 +140,12 @@ Route::get('/volunteers/archive/retrieve/{id}', [VolunteerController::class, 're
 Route::get('/collection', [CollectionController::class, 'index'])->middleware('auth');
 Route::get('/collection_info/{id}', [CollectionController::class, 'info'])->name('collection.info')->middleware('auth');
 Route::post('/collection/store', [CollectionController::class, 'store'])->name('collection.store')->middleware('auth');
+Route::post('/collection/print', [CollectionController::class, 'print'])->name('collection.print')->middleware('auth');
 Route::get('/collection_records/archive/{id}', [CollectionController::class, 'archive'])->name('collection_records.archive')->middleware('auth');
 
 Route::get('/donation', [DonationController::class, 'index'])->middleware('auth');
 Route::post('/donation/store', [DonationController::class, 'store'])->name('donation.store')->middleware('auth');
+Route::post('/donation/print', [DonationController::class, 'print'])->name('donation.print')->middleware('auth');
 Route::get('/donation_info/{id}', [DonationController::class, 'info'])->name('donations.info')->middleware('auth');
 Route::get('/donations/archive/{id}', [DonationController::class, 'archive'])->name('donations.archive')->middleware('auth');
 Route::get('/calendars','App\Http\Controllers\ChurchController@calendar' )->middleware('auth');
@@ -151,6 +154,7 @@ Route::get('/calendars','App\Http\Controllers\ChurchController@calendar' )->midd
 Route::get('/payment', [PaymentController::class, 'index'])->name('payment.index')->middleware('auth');
 Route::post('/payment', [PaymentController::class, 'store'])->name('payment.store')->middleware('auth');
 Route::get('/payment_info/{id}', [PaymentController::class, 'info'])->name('payment.info')->middleware('auth');
+Route::post('/payment/print', [PaymentController::class, 'print'])->name('payment.print')->middleware('auth');
 Route::get('/payment/archive/{id}', [PaymentController::class, 'archive'])->name('payment.archive')->middleware('auth');
 
 

@@ -14,6 +14,24 @@ class PaymentController extends Controller
         return view('finances.payment', compact('payments'));
     }
 
+    public function print(Request $request)
+    {  
+        $validatedData = $request->validate([
+            'yearmonth' => 'required',
+        ]);
+        
+        $yearMonth = explode('-', $validatedData['yearmonth']); // Split "YYYY-MM"
+        $year = $yearMonth[0]; // Get the year
+        $month = $yearMonth[1]; // Get the month
+      
+        $payments = Payment::whereYear('created_at', $year)
+                                       ->whereMonth('created_at', $month)
+                                       ->get();
+        
+    
+        return view('finances.payment_print', compact('payments')); // ✅ Correct way
+    }
+
     public function info($id)
     {
         $payments = Payment::findOrFail($id);

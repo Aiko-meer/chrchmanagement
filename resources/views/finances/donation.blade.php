@@ -22,7 +22,58 @@
             
             </ul>
         </div>
-
+        <div class="modal fade" id="formModal1" tabindex="-1" aria-labelledby="formModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="formModalLabel">Donation Record</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <div class="container">
+                  <div class="page-inner">
+                    <div class="row">
+                      <div class="col-md-12">
+                        <div class="card">
+                          <div class="card-body">
+        
+                            <!-- Acolytes Information -->
+                            <h5 class="fw-bold mb-3">Print Record By Month</h5>
+                            <form action="{{ route('donation.print') }}" method="POST">
+                            @csrf
+                            <div id="acolytesContainer">
+                              <!-- Default Acolyte -->
+                              <div class="acolyte-group">
+                                <div class="row">
+                                  <div class="col-md-4">
+                                    <div class="form-group">
+                                      <label for="acolyteFirstName">Year and Month</label>
+                                      <input type="month" class="form-control" name="yearmonth" />
+        
+                                    </div>
+                                  </div>
+                                 
+                                 
+                                </div>
+                                <hr />
+                              </div>
+                            </div>
+              
+                          </div>
+                          <div class="card-action">
+                            <button class="btn btn-primary">Submit</button>
+                            <button class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
+                          </div>
+                        </form>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
 
         <div class="modal fade" id="formModal" tabindex="-1" aria-labelledby="formModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">
@@ -203,6 +254,13 @@
                                 <i class="fa fa-plus"></i>
                                 Donation record
                                 </button>
+                                <button
+                                class="btn btn-primary btn-round ms-2"
+                                data-bs-toggle="modal" data-bs-target="#formModal1"
+                                >
+                                <i class="fa fa-plus"></i>
+                               Print Record by Month
+                                </button>
                             </div>
                         </div>
                         <div class="card-body">
@@ -235,7 +293,7 @@
                     <td>
                     @foreach ($donation->donors as $donor)
                     {{ $donor->first_name }} {{ $donor->last_name }} <br>
-                    @endforeach
+                    @endforeach</td>
                     <td>{{ ucfirst($donation->type) }}</td>
                     <td>{{ $donation->created_at->format('F j, Y, h:iA') }}</td>
                     <td>

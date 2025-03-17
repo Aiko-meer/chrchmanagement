@@ -144,6 +144,69 @@
   </div>
 </div>
 
+<div class="modal fade" id="formModal1" tabindex="-1" aria-labelledby="formModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="formModalLabel">Collection Record</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="container">
+          <div class="page-inner">
+            <div class="row">
+              <div class="col-md-12">
+                <div class="card">
+                  <div class="card-body">
+
+                    <!-- Acolytes Information -->
+                    <h5 class="fw-bold mb-3">Acolytes Information</h5>
+                    <form action="{{ route('collection.print') }}" method="POST">
+                    @csrf
+                    <div id="acolytesContainer">
+                      <!-- Default Acolyte -->
+                      <div class="acolyte-group">
+                        <div class="row">
+                          <div class="col-md-4">
+                            <div class="form-group">
+                              <label for="acolyteFirstName">Year and Month</label>
+                              <input type="month" class="form-control" name="yearmonth" />
+
+                            </div>
+                          </div>
+                         
+                         
+                        </div>
+                        <hr />
+                      </div>
+                    </div>
+                
+
+                    <!-- Date and Time Schedule -->
+                    
+
+                    <!-- In-Kind Collection -->
+                  
+
+                    <!-- Money Collection -->
+                  
+
+                  </div>
+                  <div class="card-action">
+                    <button class="btn btn-primary">Submit</button>
+                    <button class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
+                  </div>
+                </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
   function addAcolyte() {
     const acolytesContainer = document.getElementById('acolytesContainer');
@@ -215,6 +278,13 @@
                                 >
                                 <i class="fa fa-plus"></i>
                                 Collection record
+                                </button>
+                                <button
+                                class="btn btn-primary btn-round "
+                                data-bs-toggle="modal" data-bs-target="#formModal1"
+                                >
+                                <i class="fa fa-plus"></i>
+                               Print Record By Month
                                 </button>
                             </div>
                         </div>
