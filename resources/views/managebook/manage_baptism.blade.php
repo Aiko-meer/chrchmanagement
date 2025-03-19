@@ -28,10 +28,11 @@
                                     onclick="editBaptismRecord({{ json_encode($record) }})">
                                     <i class="fa fa-edit"></i>
                                 </button>
-                                <button type="button" class="btn btn-link btn-danger" title="Move to Archive"
-                                    onclick="window.location.href='/bookrecord/archive/{{ $record->id }}'">
-                                    <i class="fas fa-archive"></i>
+                                <button type="button" class="btn btn-link btn-danger btn-lg" title="Move to Archive"
+                                    onclick="baparchive({{ json_encode($record->id) }})">
+                                    <i class="fa fa-archive"></i>
                                 </button>
+                              
                                
                             </div>
                         </td>
@@ -41,3 +42,20 @@
         </table>
     </div>
 </div>
+<script>
+    function baparchive(id) {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "Do you want to Archive the Baptism Book?",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, Archive Baptism Book!',
+            cancelButtonText: 'No, cancel',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Redirect to the retrieval route
+                window.location.href = '/bookrecord/archive/' + id;
+            }
+        });
+    }
+</script>

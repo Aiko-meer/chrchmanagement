@@ -63,16 +63,11 @@
                                                 >
                                                     <i class="fa fa-edit"></i>
                                                 </button>
-                                                <button
-                                                    type="button"
-                                                    data-bs-toggle="tooltip"
-                                                    title="Move to Archive"
-                                                    class="btn btn-link btn-danger"
-                                                    data-original-title="Remove"
-                                                    onclick="window.location.href='/baptism_archive/{{ $baptism['id'] }}'"
-                                                >
-                                                    <i class="fas fa-archive"></i>
-                                                </button>
+                                                <button type="button" class="btn btn-link btn-danger btn-lg" title="Move to Archive"
+                                                onclick="baparchive({{ json_encode($baptism['id']) }})">
+                                                <i class="fa fa-archive"></i>
+                                            </button>
+                                               
                                                 
                                             </div>
                                         </td>
@@ -91,6 +86,7 @@
     </div>
     
 </div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
       
 
@@ -132,6 +128,23 @@ document.addEventListener("DOMContentLoaded", async function () {
 });
 
 
+</script>
+<script>
+    function baparchive(id) {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "Do you want to Archive the Baptism Folder?",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, Archive Baptism Folder!',
+            cancelButtonText: 'No, cancel',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Redirect to the retrieval route
+                window.location.href = '/baptism_archive/' + id;
+            }
+        });
+    }
 </script>
 
 

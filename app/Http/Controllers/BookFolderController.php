@@ -24,10 +24,7 @@ class BookFolderController extends Controller
     $book->save();
 
     // Return success response with SweetAlert
-    return response()->json([
-        'success' => true,
-        'message' => 'Book number added successfully!'
-    ]);
+    return response()->json(['success' => true, 'message' => 'Baptism record saved successfully!']);
 }
 
 
