@@ -69,16 +69,10 @@
                                                 >
                                                     <i class="fa fa-edit"></i>
                                                 </button>
-                                                <button
-                                                    type="button"
-                                                    data-bs-toggle="tooltip"
-                                                    title="Move to Archive"
-                                                    class="btn btn-link btn-danger"
-                                                    data-original-title="Remove"
-                                                    onclick="window.location.href='/weddingfolder/archive/{{ $wedding['id'] }}'"
-                                                >
-                                                    <i class="fas fa-archive"></i>
-                                                </button>
+                                                <button type="button" class="btn btn-link btn-danger btn-lg" title="Move to Archive"
+                                                onclick="weddingarchive({{ json_encode($wedding['id']) }})">
+                                                <i class="fa fa-archive"></i>
+                                            </button>
                                             </div>
                                         </td>
                                     </tr>
@@ -134,7 +128,23 @@
     }
 });
 </script>
-
+<script>
+    function weddingarchive(id) {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "Do you want to Archive the Wedding Folder?",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, Archive Wedding Folder!',
+            cancelButtonText: 'No, cancel',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Redirect to the retrieval route
+                window.location.href = '/baptism_archive/' + id;
+            }
+        });
+    }
+</script>
 @include('layouts.footer')
 
 

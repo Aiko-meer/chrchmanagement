@@ -104,10 +104,11 @@
                                                         <i class="fa fa-edit"></i>
                                                     </button>
                                                 @endif
-                                                    <button type="button" data-bs-toggle="tooltip" title="Move to Archive" class="btn btn-link btn-danger"
-                                                    onclick="window.location.href='{{ route('bookfolder.archive', $book->id) }}'">
-                                                        <i class="fas fa-archive"></i>
-                                                    </button>
+                                                <button type="button" class="btn btn-link btn-danger btn-lg" title="Move to Archive"
+                                                onclick="bookarchive({{ json_encode($book['id']) }})">
+                                                <i class="fa fa-archive"></i>
+                                            </button>
+                                                    
                                                 </div>
                                             </td>
                                         </tr>
@@ -173,7 +174,23 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 </script>
-
+<script>
+    function bookarchive(id) {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "Do you want to Archive the Book Folder?",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, Archive Book Folder!',
+            cancelButtonText: 'No, cancel',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Redirect to the retrieval route
+                window.location.href = '/baptism_archive/' + id;
+            }
+        });
+    }
+</script>
 
 
 @include('layouts.footer')
