@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Auth;
-
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 
@@ -25,7 +25,23 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/home';
+    protected function redirectTo()
+{
+    if (!Auth::check()) { // If user is NOT authenticated
+        return '/login'; // Redirect to login page
+    }
+
+    $user = Auth::user(); // Get authenticated user
+
+    // Store user type in session
+    session(['user_type' => $user->type]);
+
+    // Set a flash message
+    session()->flash('success', 'Welcome back, ' . $user->name . '!');
+
+    return '/home'; // Redirect authenticated users to home
+}
+
 
     /**
      * Create a new controller instance.

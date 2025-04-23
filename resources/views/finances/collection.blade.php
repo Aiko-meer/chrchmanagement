@@ -325,10 +325,19 @@
                                               <i class="fas fa-eye"></i> 
                                           </button>
                                               
-                                              <button type="button" data-bs-toggle="tooltip" title="Move to Archive"
-                                                  class="btn btn-link btn-danger" onclick="window.location.href='/collection_records/archive/{{ $collection->id }}'">
-                                                  <i class="fas fa-archive"></i>
-                                              </button>
+                                            
+                                              <button type="button" class="btn btn-link btn-danger btn-lg" title="Move to Archive"
+                                                      onclick="Collarchive({{ json_encode($collection->id) }})">
+                                                      <i class="fa fa-archive"></i>
+                                                  </button>
+                                              @auth
+                                              @if(session('user_type') == '1')
+                                                  <button type="button" class="btn btn-link btn-danger btn-lg" title="Move to Archive"
+                                                      onclick="colldelete({{ json_encode($collection->id) }})">
+                                                      <i class="fa fa-times"></i>
+                                                  </button>
+                                              @endif
+                                          @endauth
                                           </div>
                                       </td>
                                   </tr>
@@ -346,7 +355,41 @@
             </div>
     </div>
 </div>
-
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    function colldelete(id) {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "Do you want to Delete the Collection Record?",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, Delete Collection Record!',
+            cancelButtonText: 'No, cancel',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Redirect to the retrieval route
+                window.location.href = '/collection/delete/' + id;
+            }
+        });
+    }
+</script>
+<script>
+  function Collarchive(id) {
+      Swal.fire({
+          title: 'Are you sure?',
+          text: "Do you want to Archive the Collection Record?",
+          icon: 'question',
+          showCancelButton: true,
+          confirmButtonText: 'Yes, Archive Collection Record!',
+          cancelButtonText: 'No, cancel',
+      }).then((result) => {
+          if (result.isConfirmed) {
+              // Redirect to the retrieval route
+              window.location.href = '/collection_records/archive/' + id;
+          }
+      });
+  }
+</script>
 
 
 @include('layouts.footer')

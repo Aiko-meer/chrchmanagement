@@ -82,4 +82,12 @@ class DonationController extends Controller
 
         return redirect()->back()->with('success', 'Donation archived successfully.');
     }
+
+    public function destroy($id)
+    {
+        $record = Donation::findOrFail($id); // Replace `BookRecord` with your actual model
+        $record->delete(); // Permanently delete the record
+    
+        return redirect()->back()->with('success', 'Record successfully deleted.');
+    }
 }

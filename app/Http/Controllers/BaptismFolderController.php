@@ -260,4 +260,12 @@ class BaptismFolderController extends Controller
     return redirect()->back()->with('success', "All baptism records for $year have been retrieved.");
 }
 
+public function destroy($id)
+{
+    $record = Baptism_folder::findOrFail($id); // Replace `BookRecord` with your actual model
+    $record->delete(); // Permanently delete the record
+
+    return redirect()->back()->with('success', 'Record successfully deleted.');
+}
+
 }

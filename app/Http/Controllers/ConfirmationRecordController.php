@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\ConfirmationFolder;
 use Illuminate\Support\Carbon;
 use App\Models\ConfirmationRecord;
+use App\Models\Ministry;
 class ConfirmationRecordController extends Controller
 {
     public function showByFuneral($confirmation_id)
@@ -138,10 +139,10 @@ class ConfirmationRecordController extends Controller
 
         $confirmationYear = $ConfirmationFolder->year;
         $confirmationID = $ConfirmationFolder->id;
+        $ministries = Ministry::all(); // Fetches all records
 
 
-
-        return view('record/confirmation_info', compact('confirmationRecord', 'ConfirmationFolder', 'confirmationYear', 'confirmationID'));
+        return view('record/confirmation_info', compact('confirmationRecord', 'ConfirmationFolder', 'confirmationYear', 'confirmationID','ministries'));
     }
     public function archive($id)
 {

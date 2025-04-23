@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Member;
 use App\Models\Ministry;
 
+
 class MemberController extends Controller
 {
      
@@ -42,13 +43,87 @@ class MemberController extends Controller
             'picture' => 'nullable|image|max:2048',
         ]);
     
-        // Handle picture upload
+        // ✅ Duplicate check
+        $duplicate = Member::where('first_name', $request->first_name)
+            ->where('last_name', $request->last_name)
+            ->where('dob', $request->dob)
+            ->first();
+    
+        if ($duplicate) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'A member with the same name and date of birth already exists.');
+        }
+    
+        // ✅ Handle picture upload
         $picturePath = null;
         if ($request->hasFile('picture')) {
             $picturePath = $request->file('picture')->store('pictures', 'public');
         }
     
-        // Create new member
+        // ✅ Create new member
+        Member::create([
+            'status' => $request->status,
+            'first_name' => $request->first_name,
+            'middle_name' => $request->middle_name,
+            'last_name' => $request->last_name,
+            'dob' => $request->dob,
+            'civil_status' => $request->civil_status,
+            'age' => $request->age,
+            'gender' => $request->gender,
+            'position' => $request->position,
+            'email' => $request->email,
+            'contact_number' => $request->contact_number,
+            'purok_no' => $request->purok_no,
+            'street_address' => $request->street_address,
+            'barangay' => $request->barangay,
+            'municipality' => $request->municipality,
+            'province' => $request->province,
+            'picture' => $picturePath,
+        ]);
+    
+        return redirect()->back()->with('success', 'Member registered successfully');
+    }
+
+    public function baptisministry(Request $request)
+    {
+        $validated = $request->validate([
+            'status' => 'required',
+            'first_name' => 'required',
+            'last_name' => 'required',
+            'dob' => 'required|date',
+            'civil_status' => 'required',
+            'age' => 'required|integer',
+            'gender' => 'required',
+            'email' => 'required|email',
+            'contact_number' => 'required',
+            'purok_no' => 'required',
+            'street_address' => 'required',
+            'barangay' => 'required',
+            'municipality' => 'required',
+            'province' => 'required',
+            'picture' => 'nullable|image|max:2048',
+        ]);
+    
+        // ✅ Duplicate check
+        $duplicate = Member::where('first_name', $request->first_name)
+            ->where('last_name', $request->last_name)
+            ->where('dob', $request->dob)
+            ->first();
+    
+        if ($duplicate) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'A member with the same name and date of birth already exists.');
+        }
+    
+        // ✅ Handle picture upload
+        $picturePath = null;
+        if ($request->hasFile('picture')) {
+            $picturePath = $request->file('picture')->store('pictures', 'public');
+        }
+    
+        // ✅ Create new member
         Member::create([
             'status' => $request->status,
             'first_name' => $request->first_name,
@@ -193,6 +268,14 @@ class MemberController extends Controller
         $member->save();
     
         return redirect()->back()->with('success', 'Member archived successfully.');
+    }
+
+    public function destroy($id)
+    {
+        $record = Member::findOrFail($id); // Replace `BookRecord` with your actual model
+        $record->delete(); // Permanently delete the record
+    
+        return redirect()->back()->with('success', 'Record successfully Deleted.');
     }
 
 }

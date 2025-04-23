@@ -73,6 +73,14 @@
                                                 onclick="weddingarchive({{ json_encode($wedding['id']) }})">
                                                 <i class="fa fa-archive"></i>
                                             </button>
+                                            @auth
+                                        @if(session('user_type') == '1')
+                                        <button type="button" class="btn btn-link btn-danger btn-lg" title="Move to Archive"
+                                        onclick="weddingdelete({{ json_encode($wedding['id']) }})">
+                                        <i class="fa fa-times"></i>
+                                    </button>
+                                        @endif
+                                    @endauth
                                             </div>
                                         </td>
                                     </tr>
@@ -141,6 +149,23 @@
             if (result.isConfirmed) {
                 // Redirect to the retrieval route
                 window.location.href = '/baptism_archive/' + id;
+            }
+        });
+    }
+</script>
+<script>
+    function weddingdelete(id) {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "Do you want to Delete Wedding Folder?",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, Delete Wedding Folder!',
+            cancelButtonText: 'No, cancel',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Redirect to the retrieval route
+                window.location.href = '/wedding/delete/' + id;
             }
         });
     }

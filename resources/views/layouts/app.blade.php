@@ -16,6 +16,10 @@
     <link rel="stylesheet" href="assets/css/login.css">
     <!-- Scripts -->
     @vite(['resources/js/app.js'])
+
+      <!-- Include jQuery and SweetAlert -->
+      <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     
 </head>
 <body>

@@ -71,4 +71,12 @@ public function retrieve($id)
 
     return redirect()->back()->with('success', "All Book Record for  have been retrieved.");
 }
+
+public function destroy($id)
+{
+    $record = BookFolder::findOrFail($id); // Replace `BookRecord` with your actual model
+    $record->delete(); // Permanently delete the record
+
+    return redirect()->back()->with('success', 'Record successfully deleted.');
+}
 }

@@ -33,7 +33,10 @@
                                         onclick="funarchive({{ json_encode($record->id) }})">
                                         <i class="fa fa-archive"></i>
                                     </button>
-                                            
+                                    <button type="button" class="btn btn-link btn-danger btn-lg" title="Move to Archive"
+                                    onclick="fundelete({{ json_encode($record->id) }})">
+                                    <i class="fa fa-times"></i>
+                                </button>
                                           </div>
                                       </td>
                                   </tr>
@@ -54,11 +57,28 @@
                                 }).then((result) => {
                                     if (result.isConfirmed) {
                                         // Redirect to the retrieval route
-                                        window.location.href = '/bookrecord/archive/' + id;
+                                        window.location.href = '/funeral/archive/' + id;
                                     }
                                 });
                             }
                         </script>
+                         <script>
+                            function fundelete(id) {
+                                Swal.fire({
+                                    title: 'Are you sure?',
+                                    text: "Do you want to Delete the Funeral Record?",
+                                    icon: 'question',
+                                    showCancelButton: true,
+                                    confirmButtonText: 'Yes, Delete Funeral Record!',
+                                    cancelButtonText: 'No, cancel',
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        // Redirect to the retrieval route
+                                        window.location.href = '/funeral_record/destroy/' + id;
+                                    }
+                                });
+                            }
+                        </script> 
                         <script> 
                             function editFuneralRecord(record) {
                                 // Set form fields with the existing record data

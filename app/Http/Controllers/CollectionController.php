@@ -117,6 +117,14 @@ class CollectionController extends Controller
             return redirect()->back()->with('error', 'Failed to save collection. Please try again.');
         }
     }
+
+    public function destroy($id)
+{
+    $record = CollectionRecord::findOrFail($id); // Replace `BookRecord` with your actual model
+    $record->delete(); // Permanently delete the record
+
+    return redirect()->back()->with('success', 'Record successfully deleted.');
+}
     
     
 }

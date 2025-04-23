@@ -6,7 +6,11 @@
     <meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport"/>
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="icon" href="{{ asset('assets/img/kaiadmin/favicon.ico') }}" type="image/x-icon"/>
-
+   
+      <!-- SweetAlert2 CDN -->
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  
+  
     <script src="{{ asset('assets/js/plugin/webfont/webfont.min.js') }}"></script>
     <script>
       WebFont.load({
@@ -283,7 +287,25 @@
                   
                 </a>
               </li>
-              
+              <li class="nav-item {{ Request::is('allrecords') ? 'active' : '' }}">
+                <a href="/allrecord">
+                  <i class="fas fa-archive"></i>
+                  <p>All Records</p>
+                  
+                </a>
+              </li>
+              @auth
+              @if(session('user_type') == '1')
+              <li class="nav-item {{ Request::is('user') ? 'active' : '' }}">
+                <a href="/user">
+                  <i class="fas fa-user"></i>
+                  <p>User</p>
+                  
+                </a>
+              </li>
+              @endif
+          @endauth
+             
             </ul>
           </div>
         </div>
@@ -367,14 +389,35 @@
                         <div class="dropdown-divider"></div>
                        
                         <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="{{ route('logout') }}"
-                                       onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
-                                        {{ __('Logout') }}
-                        </a>
-                        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                            @csrf
-                        </form>
+                        <a class="dropdown-item" href="#" id="logout-button">
+                          {{ __('Logout') }}
+                      </a>
+                      
+                      <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                          @csrf
+                      </form>
+                      
+                      <script>
+                      document.getElementById('logout-button').addEventListener('click', function(event) {
+                          event.preventDefault();
+                          
+                          Swal.fire({
+                              title: "Are you sure?",
+                              text: "You will be logged out!",
+                              icon: "warning",
+                              showCancelButton: true,
+                              confirmButtonColor: "#d33",
+                              cancelButtonColor: "#3085d6",
+                              confirmButtonText: "Yes, logout!"
+                          }).then((result) => {
+                              if (result.isConfirmed) {
+                                  document.getElementById('logout-form').submit();
+                              }
+                          });
+                      });
+                      </script>
+                      
+                     
                       </li>
                     </div>
                   </ul>
@@ -611,6 +654,18 @@ function showImagePreview(event) {
 });
 
       </script>
-          
+          @if(session('success'))
+          <script>
+              document.addEventListener("DOMContentLoaded", function() {
+                  Swal.fire({
+                      title: "Success!",
+                      text: "{{ session('success') }}",
+                      icon: "success",
+                      confirmButtonText: "OK"
+                  });
+              });
+          </script>
+      @endif
+      
   </body>
 </html>

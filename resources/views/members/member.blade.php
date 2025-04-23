@@ -69,7 +69,7 @@
                   @csrf
                   <div class="card-body">
                   <input type="hidden" id="status" name="status" value="Active" />
-                  <div class="form-group">
+                  <div class="form-group" hidden>
                     <label for="uploadPicture">Upload Picture</label>
                     <input type="file" class="form-control" id="uploadPicture" name="picture" />
                   </div>
@@ -129,7 +129,12 @@
                     <div class="col-md-4">
                       <div class="form-group">
                         <label for="position">Ministry Role</label>
-                        <input type="text" class="form-control" id="position" name="position" placeholder="Enter Ministry Role" />
+                        <select class="form-control" id="gender" name="position" id="">
+                          @foreach ($ministries as $min )
+                          <option >{{$min->ministry}}</option>
+                          @endforeach
+                         
+                        </select>
                       </div>
                     </div>
                   </div>
@@ -357,12 +362,19 @@
                                 New Ministry
                                 </button>
                                 <button
-                                class="btn btn-primary btn-round "
+                                class="btn btn-primary btn-round ms-2"
                                 data-bs-toggle="modal" data-bs-target="#formModal1"
                                 >
                                 <i class="fa fa-plus"></i>
                                 New Ministry Role
                                 </button>
+                                <a href="/allrecord"
+                                class="btn btn-primary btn-round ms-2"
+                               >
+                                <i class="fa fa-plus"></i>
+                                Baptism Record
+                             </a>
+                             
                                 
                             </div>
                         </div>
@@ -428,16 +440,20 @@
                                   >
                                       <i class="fa fa-edit"></i>
                                   </button>
-                                    <button
-                                        type="button"
-                                        data-bs-toggle="tooltip"
-                                        title="Move to Archive"
-                                        class="btn btn-link btn-danger"
-                                        data-original-title="Remove"
-                                        onclick="window.location.href='/members/archive/{{ $member->id }}'"
-                                    >
-                                        <i class="fas fa-archive"></i>
+                                   
+                                    @auth
+                                    @if(session('user_type') == '1')
+                                        <button type="button" class="btn btn-link btn-danger btn-lg" title="Move to Archive"
+                                            onclick="memberarchive({{ json_encode($member['id']) }})">
+                                            <i class="fa fa-archive"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-link btn-danger btn-lg" title="Delete"
+                                        onclick="memberdelete({{ json_encode($member['id']) }})">
+                                        <i class="fa fa-times"></i>
                                     </button>
+                                    @endif
+                                @endauth
+
                                     </div>
                                 </td>
                                 </tr>
@@ -507,6 +523,48 @@
         </div>
       </div>
 </div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    function memberdelete(id) {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "Do you want to Delete the Member?",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, Delete Member!',
+            cancelButtonText: 'No, cancel',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Redirect to the retrieval route
+                window.location.href = '/members/delete/' + id;
+            }
+        });
+    }
+</script>
+<script>
+  function memberarchive(id) {
+      Swal.fire({
+          title: 'Are you sure?',
+          text: "Do you want to Archive this Member??",
+          icon: 'question',
+          showCancelButton: true,
+          confirmButtonText: 'Yes, Archive the Member!',
+          cancelButtonText: 'No, cancel',
+      }).then((result) => {
+          if (result.isConfirmed) {
+              // Redirect to the retrieval route
+              window.location.href = '/members/archive/' + id;
+          }
+      });
+  }
+</script>
+@if(session('delete'))
+    <script>
+        alert("{{ session('delete') }}");
+    </script>
+@endif
 
 
 

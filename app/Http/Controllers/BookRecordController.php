@@ -9,6 +9,7 @@ use App\Models\BookFolder;
 use App\Models\Baptism_folder;
 use Carbon\Carbon;
 use Illuminate\Http\Response;
+use App\Models\Ministry;
 
 
 
@@ -157,9 +158,10 @@ class BookRecordController extends Controller
         $baptismYear = $baptismFolder->year;
         $baptismID = $baptismFolder->id;
 
+        $ministries = Ministry::all(); // Fetches all records
 
 
-        return view('record.book_record_info', compact('bookRecord', 'godparents','bookFolder', 'baptismYear', 'baptismID'));
+        return view('record.book_record_info', compact('bookRecord', 'godparents','bookFolder', 'baptismYear', 'baptismID','ministries'));
     }
     public function getGodparents($baptism_id)
 {
@@ -327,6 +329,8 @@ public function destroy($id)
 
     return redirect()->back()->with('success', 'Record successfully deleted.');
 }
+
+
 
 public function check($id)
 {

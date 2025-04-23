@@ -26,13 +26,30 @@ use App\Http\Controllers\DonationController;
 use App\Http\Controllers\CollectionController;
 use App\Http\Controllers\ArchiveController;
 use App\Http\Controllers\ScheduleController;
-
+use App\Http\Controllers\PasswordController;
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\AllrecordController;
 
 Route::get('/','App\Http\Controllers\ChurchController@index')->middleware('auth');
+//login
+Route::get('/resetpass', [PasswordController::class, 'index'])->name('pass.index');
+Route::post('/resetpass/confirmemail', [PasswordController::class, 'conemail'])->name('pass.conemail');
+Route::post('/otpconfirm', [PasswordController::class, 'otpconfirm'])->name('otp');
+Route::post('/changepass', [PasswordController::class, 'changepass'])->name('changepass');
+Route::post('/login', [PasswordController::class, 'login'])->name('login');
+//user
+Route::get('/user', [UserController::class, 'index'])->name('user');
+Route::post('/user/create', [UserController::class, 'create'])->name('user.store');
+Route::match(['post', 'put'], 'user/update/{id}', [UserController::class, 'update'])->name('user.update');
+Route::get('/user/delete/{id}', [UserController::class, 'destroy'])->name('user.delete');
+//all record
+Route::get('/allrecord', [AllrecordController::class, 'index'])->name('allrecord.index');
 //batptism
 Route::get('/baptism', [BaptismFolderController::class, 'index'])->name('baptism.index')->middleware('auth');
 Route::post('/add-year', [BaptismFolderController::class, 'addYear'])->name('add.year')->middleware('auth');
 Route::get('/baptism_archive/{id}', [BaptismFolderController::class, 'archive'])->name('baptism.archive')->middleware('auth');
+Route::get('/baptism_archive/delete/{id}', [BaptismFolderController::class, 'destroy'])->name('baptism.destroy')->middleware('auth');
 Route::get('/baptism_retrieve/{year}', [BaptismFolderController::class, 'retrieve'])->name('baptism.retrieve')->middleware('auth');
 Route::get('/baptism_archive/month/{year}', [BaptismFolderController::class, 'month'])->name('baptism.archive.month')->middleware('auth');
 //book
@@ -40,6 +57,7 @@ Route::get('/book/{baptism_id}', [BookFolderController::class, 'showByBaptism'])
 Route::get('/book_archived/{baptism_id}', [BookFolderController::class, 'showByBaptismArchived'])->name('book.showByBaptismArchived')->middleware('auth');
 Route::get('/book_archived/retrieve/{baptism_id}', [BookFolderController::class, 'retrieve'])->name('book.retrieve')->middleware('auth');
 Route::post('/book/store', [BookFolderController::class, 'store'])->name('book.store')->middleware('auth');
+Route::get('/book/delete/{id}', [BookFolderController::class, 'destroy'])->name('book.delete')->middleware('auth');
 Route::get('/bookfolder_archive/{id}', [BookFolderController::class, 'archive'])->name('bookfolder.archive')->middleware('auth');
 
 
@@ -59,8 +77,6 @@ Route::get('/baptism_certificate/{id}', [BookRecordController::class, 'certifica
 Route::get('/baptism_print/{id}', [BookRecordController::class, 'print'])->name('book_record.print')->middleware('auth');
 
 //check baptism record limit
-
-
 Route::get('/check-baptism-date', [BookRecordController::class, 'checkBaptismDate']);
 Route::get('/check-confirmation-date', [ConfirmationRecordController::class, 'checkConfirmation']);
 Route::get('/check-wedding-date', [WeddingFolderController::class, 'checkwedding']);
@@ -72,6 +88,7 @@ Route::get('/confirmationfolder/archive/{id}', [ConfirmationFolderController::cl
 Route::get('/confirmationfolder/archive/retrieve/{year}', [ConfirmationFolderController::class, 'retrieve'])->name('confirmationfolder.retrieve')->middleware('auth');
 Route::get('/confirmationfolder/archive/month/{year}', [ConfirmationFolderController::class, 'month'])->name('confirmationfolder.archive.month')->middleware('auth');
 Route::post('/add-year-confirmation', [ConfirmationFolderController::class, 'addYear'])->name('add.year.confirmation')->middleware('auth');
+Route::get('/add-year-confirmation/delete/{id}', [ConfirmationFolderController::class, 'destroy'])->name('add.year.delete')->middleware('auth');
 //confirmation record
 Route::get('/confirmation_record/{confirmation_id}', [ConfirmationRecordController::class, 'showByFuneral'])->name('funeral_record.showByFuneral')->middleware('auth');
 Route::get('/confirmation_record_archive/{confirmation_id}', [ConfirmationRecordController::class, 'showByFuneralArchived'])->name('funeral_record.showByFuneralArchived')->middleware('auth');
@@ -91,13 +108,14 @@ Route::get('/wedding_record/{wedding_id}', [WeddingFolderController::class, 'sho
 Route::get('/wedding_record_archived/{wedding_id}', [WeddingFolderController::class, 'showByWeddingArchived'])->name('wedding_record.showByWeddingArchived')->middleware('auth');
 Route::get('/wedding', [WeddingFolderController::class, 'index'])->name('wedding.index')->middleware('auth');
 Route::get('/wedding/destroy/{id}', [WeddingFolderController::class, 'delete'])->name('wedding.destroy')->middleware('auth');
+Route::get('/wedding/delete/{id}', [WeddingFolderController::class, 'destroy'])->name('wedding.delete')->middleware('auth');
 Route::get('/wedding/status/{id}', [WeddingFolderController::class, 'status'])->name('wedding.status')->middleware('auth');
 Route::post('/add-year-wedding', [WeddingFolderController::class, 'addYear'])->name('add.year.wedding')->middleware('auth');
 Route::get('/weddingfolder/archive/{id}', [WeddingFolderController::class, 'archive'])->name('weddingfolder.archive')->middleware('auth');
 Route::get('/weddingfolder/archive/month/{year}', [WeddingFolderController::class, 'month'])->name('weddingfolder.archive.month')->middleware('auth');
 Route::get('/weddingrecord/archive/{id}', [WeddingFolderController::class, 'archive_record'])->name('weddingrecord.archive')->middleware('auth');
 Route::get('/weddingrecord/archive/retrieve/{year}', [WeddingFolderController::class, 'retrieve'])->name('weddingrecord.retrive')->middleware('auth');
-Route::get('/weddingrecord/archive/retrieverecord/{id}', [WeddingFolderController::class, 'retrieve'])->name('weddingrecord.retrive')->middleware('auth');
+Route::get('/weddingrecord/archive/retrieverecord/{id}', [WeddingFolderController::class, 'retrievewedding'])->name('weddingrecord.retrive')->middleware('auth');
 
 Route::put('/weddings/update', [WeddingFolderController::class, 'update'])->name('weddings.update')->middleware('auth'); // Update a wedding record
 Route::get('/wedding_info/{wedding_id}', [WeddingFolderController::class, 'showWeddingInfo'])->name('wedding.info')->middleware('auth');
@@ -106,6 +124,7 @@ Route::get('/funeral', [FuneralFolderController::class, 'index'])->name('funeral
 Route::get('/funeral_record', 'App\Http\Controllers\ChurchController@funeral_record')->middleware('auth');
 
 Route::post('/add-year-funeral', [FuneralFolderController::class, 'addYear'])->name('add.year.funeral')->middleware('auth');
+Route::get('/add-year-funeral/delete/{id}', [FuneralFolderController::class, 'destroy'])->name('add.year.delete')->middleware('auth');
 Route::get('/funeralfolder/archive/{id}', [FuneralFolderController::class, 'archive'])->name('funeralfolder.archive')->middleware('auth');
 Route::get('/funeralfolder/archive/retrieve/{year}', [FuneralFolderController::class, 'retrieve'])->name('funeralfolder.retrieve')->middleware('auth');
 Route::get('/funeralfolder/archive/month/{year}', [FuneralFolderController::class, 'month'])->name('funeralfolder.archive,month')->middleware('auth');
@@ -124,11 +143,13 @@ Route::get('/funeralrecord/archive/{id}', [FuneralRecordController::class, 'arch
 //members
 Route::get('/member', [MemberController::class, 'index'])->name('members.index')->middleware('auth');
 Route::post('/member', [MemberController::class, 'store'])->name('member.store')->middleware('auth');
+Route::post('/member/baptism', [MemberController::class, 'baptisministry'])->name('member.bapminis')->middleware('auth');
 Route::post('/member/ministry', [MemberController::class, 'ministry'])->name('member.ministry')->middleware('auth');
 Route::post('/member/ministry/destroy', [MemberController::class, 'delete'])->name('member.destroy')->middleware('auth');
 Route::resource('members', MemberController::class)->middleware('auth');
 Route::put('/members/{member}', [MemberController::class, 'update'])->name('members.update')->middleware('auth');
 Route::get('/members/archive/{id}', [MemberController::class, 'archive'])->name('members.archive')->middleware('auth');
+Route::get('/members/delete/{id}', [MemberController::class, 'destroy'])->name('members.destroy')->middleware('auth');
 Route::get('/members/archive/retrieve/{id}', [MemberController::class, 'retrieve'])->name('members.retrieve')->middleware('auth');
 //volunteer
 Route::get('/volunteer/{ministry}', [VolunteerController::class, 'index'])->name('volunteers.index')->middleware('auth');
@@ -141,11 +162,13 @@ Route::get('/volunteers/archive/retrieve/{id}', [VolunteerController::class, 're
 Route::get('/collection', [CollectionController::class, 'index'])->middleware('auth');
 Route::get('/collection_info/{id}', [CollectionController::class, 'info'])->name('collection.info')->middleware('auth');
 Route::post('/collection/store', [CollectionController::class, 'store'])->name('collection.store')->middleware('auth');
+Route::get('/collection/delete/{id}', [CollectionController::class, 'destroy'])->name('collection.destroy')->middleware('auth');
 Route::post('/collection/print', [CollectionController::class, 'print'])->name('collection.print')->middleware('auth');
 Route::get('/collection_records/archive/{id}', [CollectionController::class, 'archive'])->name('collection_records.archive')->middleware('auth');
 
 Route::get('/donation', [DonationController::class, 'index'])->middleware('auth');
 Route::post('/donation/store', [DonationController::class, 'store'])->name('donation.store')->middleware('auth');
+Route::get('/donation/delete/{id}', [DonationController::class, 'destroy'])->name('donation.destory')->middleware('auth');
 Route::post('/donation/print', [DonationController::class, 'print'])->name('donation.print')->middleware('auth');
 Route::get('/donation_info/{id}', [DonationController::class, 'info'])->name('donations.info')->middleware('auth');
 Route::get('/donations/archive/{id}', [DonationController::class, 'archive'])->name('donations.archive')->middleware('auth');
@@ -154,6 +177,7 @@ Route::get('/calendars','App\Http\Controllers\ChurchController@calendar' )->midd
 
 Route::get('/payment', [PaymentController::class, 'index'])->name('payment.index')->middleware('auth');
 Route::post('/payment', [PaymentController::class, 'store'])->name('payment.store')->middleware('auth');
+Route::get('/payment/delete/{id}', [PaymentController::class, 'destroy'])->name('payment.destroy')->middleware('auth');
 Route::get('/payment_info/{id}', [PaymentController::class, 'info'])->name('payment.info')->middleware('auth');
 Route::post('/payment/print', [PaymentController::class, 'print'])->name('payment.print')->middleware('auth');
 Route::get('/payment/archive/{id}', [PaymentController::class, 'archive'])->name('payment.archive')->middleware('auth');

@@ -68,11 +68,11 @@
                                     {{ __('Login') }}
                                 </button>
 
-                                @if (Route::has('password.request'))
-                                    <a class="btn btn-link" href="{{ route('password.request') }}">
+                                
+                                    <a class="btn btn-link" href="{{ route('pass.index') }}">
                                         {{ __('Forgot Your Password?') }}
                                     </a>
-                                @endif
+                                
                             </div>
                         </div>
                     </form>
@@ -81,8 +81,44 @@
 				</div>
 			</div>
 		</div>
-      
+        @if(session('success'))
+        <script>
+            Swal.fire({
+                icon: 'success',
+                title: 'Success',
+                text: '{{ session("success") }}',
+                confirmButtonColor: '#3085d6',
+                confirmButtonText: 'OK'
+            });
+        </script>
+    @endif
+    
+    @if(session('error'))
+        <script>
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: '{{ session("error") }}',
+                confirmButtonColor: '#d33',
+                confirmButtonText: 'OK'
+            });
+        </script>
+    @endif
 	</section>
- 
+    @if(session('logout_success'))
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            Swal.fire({
+                title: "Logged Out!",
+                text: "{{ session('logout_success') }}",
+                icon: "info",
+                confirmButtonText: "OK"
+            });
+        });
+    </script>
+@endif
+
+
+     
 @endsection
 </div>

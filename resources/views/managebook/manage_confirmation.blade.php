@@ -36,6 +36,17 @@
                                         onclick="conarchive({{ json_encode($record->id) }})">
                                         <i class="fa fa-archive"></i>
                                     </button>
+                                    
+                                    @auth
+                                    @if(session('user_type') == '1')
+                                        <button type="button" class="btn btn-link btn-danger btn-lg" title="Move to Archive"
+                                            onclick="confirmdelete({{ json_encode($record->id) }})">
+                                            <i class="fa fa-times"></i>
+                                        </button>
+                                    @endif
+                                @endauth
+                                
+                                
                                             
                                           </div>
                                       </td>
@@ -58,7 +69,24 @@
                                 }).then((result) => {
                                     if (result.isConfirmed) {
                                         // Redirect to the retrieval route
-                                        window.location.href = '/bookrecord/archive/' + id;
+                                        window.location.href = '/confirmationrecord/archive/' + id;
+                                    }
+                                });
+                            }
+                        </script>
+                        <script>
+                            function confirmdelete(id) {
+                                Swal.fire({
+                                    title: 'Are you sure?',
+                                    text: "Do you want to Delete the Confirmation Record?",
+                                    icon: 'question',
+                                    showCancelButton: true,
+                                    confirmButtonText: 'Yes, Delete Rec!',
+                                    cancelButtonText: 'No, cancel',
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        // Redirect to the retrieval route
+                                        window.location.href = '/confirmation/delete/' + id;
                                     }
                                 });
                             }

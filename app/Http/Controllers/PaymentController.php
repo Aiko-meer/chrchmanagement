@@ -69,4 +69,12 @@ class PaymentController extends Controller
 
         return redirect()->back()->with('success', 'Payment archived successfully.');
     }
+
+    public function destroy($id)
+    {
+        $record = Payment::findOrFail($id); // Replace `BookRecord` with your actual model
+        $record->delete(); // Permanently delete the record
+    
+        return redirect()->back()->with('success', 'Record successfully deleted.');
+    }
 }

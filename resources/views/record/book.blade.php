@@ -108,6 +108,14 @@
                                                 onclick="bookarchive({{ json_encode($book['id']) }})">
                                                 <i class="fa fa-archive"></i>
                                             </button>
+                                            @auth
+                                            @if(session('user_type') == '1')
+                                                <button type="button" class="btn btn-link btn-danger btn-lg" title="Move to Archive"
+                                                    onclick="bapdelete({{ json_encode($book['id']) }})">
+                                                    <i class="fa fa-times"></i>
+                                                </button>
+                                            @endif
+                                        @endauth
                                                     
                                                 </div>
                                             </td>
@@ -191,7 +199,23 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 </script>
-
+<script>
+    function bapdelete(id) {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "Do you want to Delete the Baptism Book Folder?",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, Delete Baptism Book Folder!',
+            cancelButtonText: 'No, cancel',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Redirect to the retrieval route
+                window.location.href = '/book/delete/' + id;
+            }
+        });
+    }
+</script>
 
 @include('layouts.footer')
 

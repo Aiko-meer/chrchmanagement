@@ -241,4 +241,12 @@ public function month($year)
 
     return redirect()->back()->with('success', "All confirmation records for $year have been retrieved.");
 }
+
+public function destroy($id)
+{
+    $record = ConfirmationFolder::findOrFail($id); // Replace `BookRecord` with your actual model
+    $record->delete(); // Permanently delete the record
+
+    return redirect()->back()->with('success', 'Record successfully deleted.');
+}
 }

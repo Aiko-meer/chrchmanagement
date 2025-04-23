@@ -231,10 +231,19 @@
                                           class="btn btn-link btn-primary" onclick="window.location.href='/payment_info/{{ $payment->id }}'">
                                               <i class="fas fa-eye"></i> 
                                           </button>
-                                              <button type="button" data-bs-toggle="tooltip" title="Move to Archive"
-                                                  class="btn btn-link btn-danger" onclick="window.location.href='/payment/archive/{{ $payment->id }}'">
-                                                  <i class="fas fa-archive"></i>
-                                              </button>
+                                              
+                                              <button type="button" class="btn btn-link btn-danger btn-lg" title="Move to Archive"
+                                                      onclick="donarchive({{ json_encode($payment->id) }})">
+                                                      <i class="fa fa-archive"></i>
+                                                  </button>
+                                              @auth
+                                              @if(session('user_type') == '1')
+                                                  <button type="button" class="btn btn-link btn-danger btn-lg" title="Move to Archive"
+                                                      onclick="dondelete({{ json_encode($payment->id) }})">
+                                                      <i class="fa fa-times"></i>
+                                                  </button>
+                                              @endif
+                                          @endauth
                                           </div>
                                       </td>
                                   </tr>
@@ -251,7 +260,41 @@
             </div>
     </div>
 </div>
-
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    function dondelete(id) {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "Do you want to Delete the Payment Record?",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, Delete Payment Record!',
+            cancelButtonText: 'No, cancel',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Redirect to the retrieval route
+                window.location.href = '/payment/delete/' + id;
+            }
+        });
+    }
+</script>
+<script>
+  function donarchive(id) {
+      Swal.fire({
+          title: 'Are you sure?',
+          text: "Do you want to Archive the Payment Record?",
+          icon: 'question',
+          showCancelButton: true,
+          confirmButtonText: 'Yes, Archive Payment Record!',
+          cancelButtonText: 'No, cancel',
+      }).then((result) => {
+          if (result.isConfirmed) {
+              // Redirect to the retrieval route
+              window.location.href = '/payment/archive/' + id;
+          }
+      });
+  }
+</script>
 
 
 @include('layouts.footer')

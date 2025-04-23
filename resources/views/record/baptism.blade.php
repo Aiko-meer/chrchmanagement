@@ -67,6 +67,14 @@
                                                 onclick="baparchive({{ json_encode($baptism['id']) }})">
                                                 <i class="fa fa-archive"></i>
                                             </button>
+                                            @auth
+                                            @if(session('user_type') == '1')
+                                                <button type="button" class="btn btn-link btn-danger btn-lg" title="Move to Archive"
+                                                    onclick="bapdelete({{ json_encode($baptism['id']) }})">
+                                                    <i class="fa fa-times"></i>
+                                                </button>
+                                            @endif
+                                        @endauth
                                                
                                                 
                                             </div>
@@ -88,8 +96,23 @@
 </div>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-      
-
+    function bapdelete(id) {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "Do you want to Delete the Baptism Year Folder?",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, Delete Baptism Year Folder!',
+            cancelButtonText: 'No, cancel',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Redirect to the retrieval route
+                window.location.href = '/baptism_archive/delete/' + id;
+            }
+        });
+    }
+</script>
+<script>
 document.addEventListener("DOMContentLoaded", async function () {
     let today = new Date();
     let day = today.getDate(); // Get the current day (1-31)

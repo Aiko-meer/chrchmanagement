@@ -32,7 +32,14 @@
                                     onclick="baparchive({{ json_encode($record->id) }})">
                                     <i class="fa fa-archive"></i>
                                 </button>
-                              
+                                @auth
+                                @if(session('user_type') == '1')
+                                    <button type="button" class="btn btn-link btn-danger btn-lg" title="Move to Archive"
+                                        onclick="bapdelete({{ json_encode($record->id) }})">
+                                        <i class="fa fa-times"></i>
+                                    </button>
+                                @endif
+                            @endauth
                                
                             </div>
                         </td>
@@ -55,6 +62,23 @@
             if (result.isConfirmed) {
                 // Redirect to the retrieval route
                 window.location.href = '/bookrecord/archive/' + id;
+            }
+        });
+    }
+</script>
+<script>
+    function bapdelete(id) {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "Do you want to Delete the Baptism Record?",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, Delete Baptism Record!',
+            cancelButtonText: 'No, cancel',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Redirect to the retrieval route
+                window.location.href = '/deletedelete_record/' + id;
             }
         });
     }

@@ -520,5 +520,13 @@ public function checkwedding(Request $request)
     
         return redirect()->back()->with('success', "you have deleted a Wedding Book.");
     }
+
+    public function destroy($id)
+{
+    $record = WeddingFolder::findOrFail($id); // Replace `BookRecord` with your actual model
+    $record->delete(); // Permanently delete the record
+
+    return redirect()->back()->with('success', 'Record successfully deleted.');
+}
     
 }

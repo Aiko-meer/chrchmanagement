@@ -254,4 +254,12 @@ public function month($year)
     
         return redirect()->back()->with('success', "All Funeral records for $year have been retrieved.");
     }
+
+    public function destroy($id)
+    {
+        $record = Funeral_folder::findOrFail($id); // Replace `BookRecord` with your actual model
+        $record->delete(); // Permanently delete the record
+    
+        return redirect()->back()->with('success', 'Record successfully deleted.');
+    }
 }

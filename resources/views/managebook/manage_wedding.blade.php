@@ -36,7 +36,14 @@
                                               onclick="wedarchive({{ json_encode($record->id) }})">
                                               <i class="fa fa-archive"></i>
                                           </button>
-                                              
+                                          @auth
+                                          @if(session('user_type') == '1')
+                                              <button type="button" class="btn btn-link btn-danger btn-lg" title="Move to Archive"
+                                                  onclick="weddingdelete({{ json_encode($record->id) }})">
+                                                  <i class="fa fa-times"></i>
+                                              </button>
+                                          @endif
+                                      @endauth
                                           </div>
                                       </td>
                                   </tr>
@@ -270,11 +277,28 @@
                                 }).then((result) => {
                                     if (result.isConfirmed) {
                                         // Redirect to the retrieval route
-                                        window.location.href = '/bookrecord/archive/' + id;
+                                        window.location.href = '/weddingrecord/archive/' + id;
                                     }
                                 });
                             }
                         </script> 
+                         <script>
+                          function weddingdelete(id) {
+                              Swal.fire({
+                                  title: 'Are you sure?',
+                                  text: "Do you want to Delete the Wedding Record?",
+                                  icon: 'question',
+                                  showCancelButton: true,
+                                  confirmButtonText: 'Yes, Delete Wedding Record!',
+                                  cancelButtonText: 'No, cancel',
+                              }).then((result) => {
+                                  if (result.isConfirmed) {
+                                      // Redirect to the retrieval route
+                                      window.location.href = '/wedding/destroy/' + id;
+                                  }
+                              });
+                          }
+                      </script> 
 <script>
    
     // Function to populate the update form
