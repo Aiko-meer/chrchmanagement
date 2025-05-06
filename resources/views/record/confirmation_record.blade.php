@@ -63,15 +63,16 @@
                                 <div class="col-md-5">
                                     <div class="form-group">
                                         <label for="pageNo">Page No.</label>
-                                        <input type="text" class="form-control" id="pageNo" name="pageNo" placeholder="Enter Page No." required>
+                                        <input type="text" class="form-control" id="pageNo" name="pageNo" value="{{$pageNo}}" readonly>
                                     </div>
                                 </div>
+
                                 
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="confirmationDate">Date of Confirmation</label>
-                                        <input type="date" class="form-control" id="confirmationDate" name="confirmationDate" required>
-                                        <small id="dateError" class="text-danger"></small> <!-- Error Message -->
+                                        <label for="baptismDate">Date of Confirmation</label>
+                                        <input type="date" class="form-control" id="baptismDate" name="confirmationDate" required>
+                                        <small id="dateError" class="text-danger"></small>
                                     </div>
                                 </div>
 
@@ -607,33 +608,50 @@
     }
 </script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-                            <script>
-                              $(document).ready(function() {
-                                  $('#confirmationDate').on('change', function() {  // ✅ Corrected the ID
-                                      let selectedDate = $(this).val();
-                                      
-                                      if (!selectedDate) return; // Stop if no date selected
-                              
-                                      $.ajax({
-                                          url: '/check-confirmation-date', // ✅ Correct route
-                                          type: 'GET',
-                                          data: { date: selectedDate },
-                                          success: function(response) {
-                                              if (response.isFull) {
-                                                  $('#confirmationDate').css('border-color', 'red').css('color', 'red'); // ✅ Corrected the ID
-                                                  $('#dateError').text('This date is fully booked. Please select another date.');
-                                              } else {
-                                                  $('#confirmationDate').css('border-color', '').css('color', ''); // ✅ Reset if available
-                                                  $('#dateError').text('');
-                                              }
-                                          },
-                                          error: function(xhr) {
-                                              console.error("Error checking date:", xhr);
-                                          }
-                                      });
-                                  });
-                              });
-                              </script>
+<script>
+    $(document).ready(function () {
+        $('#baptismDate').on('change', function () {
+            const selectedDateStr = $(this).val();
+            const selectedDate = new Date(selectedDateStr);
+    
+            // Reset UI
+            $('#baptismDate').css('border-color', '').css('color', '');
+            $('#dateError').text('');
+            $('button[type="submit"]').prop('disabled', false);
+    
+            if (!selectedDateStr) return;
+    
+            // 1. Check if it's Sunday
+            if (selectedDate.getDay() === 0) {
+                $('#baptismDate').css('border-color', 'red').css('color', 'red');
+                $('#dateError').text('Booking on Sundays is not allowed.');
+                $('button[type="submit"]').prop('disabled', true);
+                return; // Don't proceed with AJAX if Sunday
+            }
+    
+            // 2. AJAX check for fully booked date
+            $.ajax({
+                url: '/check-baptism-date',
+                type: 'GET',
+                data: { date: selectedDateStr },
+                success: function (response) {
+                    if (response.isFull) {
+                        $('#baptismDate').css('border-color', 'red').css('color', 'red');
+                        $('#dateError').text('This date is fully booked. Please select another date.');
+                        $('button[type="submit"]').prop('disabled', true);
+                    } else {
+                        $('#baptismDate').css('border-color', '').css('color', '');
+                        $('#dateError').text('');
+                        $('button[type="submit"]').prop('disabled', false);
+                    }
+                },
+                error: function (xhr) {
+                    console.error("Error checking date:", xhr);
+                }
+            });
+        });
+    });
+    </script>
 <script>
 function editConfirmationRecord(record) {
     // Dynamically update the form action URL with the record ID

@@ -7,9 +7,13 @@ use App\Models\BookRecord;
 use App\Models\GodParent;
 use App\Models\BookFolder;
 use App\Models\Baptism_folder;
-use Carbon\Carbon;
+use App\Models\Baptismprice;
+use Illuminate\Support\Carbon;
 use Illuminate\Http\Response;
 use App\Models\Ministry;
+use App\Models\ConfirmationRecord;
+use App\Models\FuneralRecord;
+use App\Models\WeddingRecord;
 
 
 
@@ -17,7 +21,7 @@ class BookRecordController extends Controller
 {
     public function store(Request $request)
     {
-        $MAX_BOOKINGS_PER_DAY = 2; // Set max bookings per day
+        
     
         // Validate request
         $validated = $request->validate([
@@ -48,6 +52,8 @@ class BookRecordController extends Controller
         'residenceProvince' => 'nullable',
         'residenceCity' => 'nullable',
         'status' => 'nullable',
+        'category' => 'required',
+        'price'=> 'required',
         // Godparent validation (nullable and array check)
         'godparentFirstName' => 'array|nullable',
         'godparentMiddleName' => 'array|nullable',
@@ -58,6 +64,7 @@ class BookRecordController extends Controller
         'godparentCity' => 'array|nullable',
         'godparentProvince' => 'array|nullable',
         'baptism_id' => 'required',
+
         ]);
     
         // Convert baptism date to Y-m-d format
@@ -106,6 +113,9 @@ class BookRecordController extends Controller
         'residence_city' => $validated['residenceCity'],
         'book_id' => $validated['baptism_id'],
         'status' => $validated['status'],
+        'category' => $validated['category'],
+        'price' => $validated['price'],
+        'payment' => 0,
         ]);
     
         return response()->json(['success' => true, 'message' => 'Baptism record saved successfully!']);
@@ -119,13 +129,22 @@ class BookRecordController extends Controller
         
 
         $bookFolder = BookFolder::where('id', $baptism_id)->firstOrFail();
-
+        $category = Baptismprice::all();
         $baptismFolder = Baptism_folder::findOrFail($bookFolder->baptism_id);
+       
 
+// Count how many records share the same book number
+
+$recordsPerPage = 10;
+
+$recordsCount = BookRecord::where('book_id', $baptism_id)->count();
+
+// Auto-calculate next page number (for the next record)
+$pageNo = ceil(($recordsCount) / $recordsPerPage) + 1;
         $baptismYear = $baptismFolder->year;
         $baptismID = $baptismFolder->id;
         // Pass records to the view
-        return view('record/book_record', compact('bookRecords', 'baptism_id','bookFolder', 'baptismYear', 'baptismID'));
+        return view('record/book_record', compact('bookRecords', 'baptism_id','bookFolder', 'baptismYear', 'baptismID', 'category', 'pageNo'));
     }
     public function showByBaptismArchived($baptism_id)
     {
@@ -311,16 +330,22 @@ public function retrieve($id)
 }
 
 public function checkBaptismDate(Request $request)
-{
-    $MAX_BOOKINGS_PER_DAY = 2;
-    $baptismDate = Carbon::parse($request->date)->format('Y-m-d');
+    {
+        $MAX_BOOKINGS_PER_DAY = 3;
+        $date = Carbon::parse($request->date)->format('Y-m-d');
 
-    $existingBookings = BookRecord::whereDate('baptism_date', $baptismDate)->count();
+        $baptismCount = BookRecord::whereDate('baptism_date', $date)->count();
+        $confirmationCount = ConfirmationRecord::whereDate('confirmation_date', $date)->count();
+        $funeralCount = FuneralRecord::whereDate('funeral_date', $date)->count();
+        $weddingCount = WeddingRecord::whereDate('wedding_date', $date)->count();
 
-    return response()->json([
-        'isFull' => $existingBookings >= $MAX_BOOKINGS_PER_DAY
-    ]);
-}
+        $totalBookings = $baptismCount + $confirmationCount + $funeralCount + $weddingCount;
+
+        return response()->json([
+            'isFull' => $totalBookings >= $MAX_BOOKINGS_PER_DAY
+        ]);
+    }
+
 
 public function destroy($id)
 {
@@ -341,4 +366,48 @@ public function check($id)
     return redirect()->back()->with('success', 'Record successfully retrieved.');
 }
 
+public function category( Request $request)
+{
+    $validated = $request->validate([
+        'baptism_name' => 'required',
+        'baptism_price' => 'required',
+    ]);
+
+    Baptismprice::create([
+        'name' => $validated['baptism_name'],
+        'price' => $validated['baptism_price'], 
+    ]);
+    
+    return redirect()->back()->with('success', 'Category Added');
+}
+
+public function price()
+{
+    $price = Baptismprice::all();
+    return view('table/baptism_price', compact( 'price'));
+}
+
+public function priceupdate(Request $request)
+{
+    $request->validate([
+        'price_id' => 'required',
+        'name' => 'required',
+        'price' => 'required',
+    ]);
+    $funeralprice = Baptismprice::findOrFail($request->price_id);
+        $funeralprice->update([
+            'name' => $request->name,
+            'price' => $request->price, 
+        ]);
+    
+    return redirect()->back()->with('success', 'Category updated');
+}
+
+public function pricedelete($id)
+{
+    $record = Baptismprice::findOrFail($id); // Replace `BookRecord` with your actual model
+    $record->delete(); // Permanently delete the record
+
+    return redirect()->back()->with('success', 'Price successfully deleted.');
+}
 }

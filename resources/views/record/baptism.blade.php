@@ -117,7 +117,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     let today = new Date();
     let day = today.getDate(); // Get the current day (1-31)
     
-    if (day === 11) { // Run only on the 28th day
+    if (day === 3) { // Run only on the 28th day
         let year = today.getFullYear();
         let month = today.toLocaleString('default', { month: 'long' }); // Get full month name
 

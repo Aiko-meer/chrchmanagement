@@ -44,6 +44,9 @@ class BookRecord extends Model
         'residence_city',
         'book_id', // Added new field 'book_id'
         'status',
+        'category',
+        'price',
+        'payment',
     ];
 
     // Optionally, define relationships

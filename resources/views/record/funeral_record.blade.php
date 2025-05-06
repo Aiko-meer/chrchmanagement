@@ -56,10 +56,11 @@
                         
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="FuneralDate">Date of Funeral</label>
-                                <input type="date" class="form-control" id="FuneralDate" name="funeral_date" />
-                                <small id="dateError" class="text-danger"></small> <!-- Error Message -->
+                                <label for="baptismDate">Date of Funeral</label>
+                                <input type="date" class="form-control" id="baptismDate" name="funeral_date" required>
+                                <small id="dateError" class="text-danger"></small>
                             </div>
+                           
                         </div>
                     </div>
                    
@@ -96,6 +97,24 @@
                                 <input type="date" class="form-control" id="deathDate" name="dod" />
                             </div>
                         </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <input type="text" id="priceInput" name="price" class="form-control" hidden>
+    
+                                <label for="residenceCity">Type of Funeral</label>
+                                <select class="form-control" id="categorySelect" name="category">  
+                                        <option value="" disabled selected>Select a category</option>
+                                        @foreach ($price as $cat)
+                                            <option value="{{ $cat->name }}" data-price="{{ $cat->price }}">
+                                                {{ $cat->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    
+                                    <p>Price: <span id="priceDisplay">₱</span></p>
+                                    
+                            </div>
+                        </div>
                     </div>
 
                     <!-- Contact Information -->
@@ -108,6 +127,8 @@
                             </div>
                         </div>
                     </div>
+
+                   
 
                     <!-- Submit Buttons -->
                     <div class="card-action">
@@ -125,6 +146,49 @@
     </div>
   </div>
 </div>
+<!--category-->
+<div class="modal fade" id="CategoryModal" tabindex="-1" aria-labelledby="CategoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog ">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="formModalLabel">New Baptism Category Price</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="baptismRecordForm" action="{{ route('funeral.category.store') }}" method="POST">
+            @csrf
+            <div class="container">
+              <div class="page-inner">
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="card">
+                      <div class="card-body">
+                        <!-- Example Form Fields -->
+                        <div class="form-group mb-3">
+                          <label for="baptism_name">Name of Category</label>
+                          <input type="text" name="baptism_name" class="form-control" required>
+                        </div>
+  
+                        <div class="form-group mb-3">
+                          <label for="baptism_date">Price</label>
+                          <input type="text" name="baptism_price" class="form-control" required>
+                        </div>
+                      </div> <!-- End card-body -->
+                    </div> <!-- End card -->
+                  </div> <!-- End col -->
+                </div> <!-- End row -->
+              </div> <!-- End page-inner -->
+            </div> <!-- End container -->
+  
+            <div class="modal-footer">
+              <button type="submit" class="btn btn-primary">Save</button>
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            </div>
+          </form>
+        </div> <!-- End modal-body -->
+      </div> <!-- End modal-content -->
+    </div> <!-- End modal-dialog -->
+  </div> <!-- End modal -->
 
 
         <div class="row">
@@ -140,6 +204,19 @@
                                 <i class="fa fa-plus"></i>
                                 New Funeral Register
                                 </button>
+                                <button
+                                class="btn btn-primary btn-round ms-2"
+                                data-bs-toggle="modal" data-bs-target="#CategoryModal"
+                                >
+                                <i class="fa fa-plus"></i>
+                                New Funeral Category Price
+                                </button>
+                                <a
+                                class="btn btn-primary btn-round ms-2"
+                                href="/funeral-price">
+                                <i class="fa fa-table"></i>
+                                Funeral Price Table
+                                </a>
                             </div>
                         </div>
                         <div class="card-body">
@@ -311,6 +388,50 @@ function editFuneralRecord(record) {
     </div>
 </div>
 <script>
+    $(document).ready(function () {
+        $('#baptismDate').on('change', function () {
+            const selectedDateStr = $(this).val();
+            const selectedDate = new Date(selectedDateStr);
+    
+            // Reset UI
+            $('#baptismDate').css('border-color', '').css('color', '');
+            $('#dateError').text('');
+            $('button[type="submit"]').prop('disabled', false);
+    
+            if (!selectedDateStr) return;
+    
+            // 1. Check if it's Sunday
+            if (selectedDate.getDay() === 0) {
+                $('#baptismDate').css('border-color', 'red').css('color', 'red');
+                $('#dateError').text('Booking on Sundays is not allowed.');
+                $('button[type="submit"]').prop('disabled', true);
+                return; // Don't proceed with AJAX if Sunday
+            }
+    
+            // 2. AJAX check for fully booked date
+            $.ajax({
+                url: '/check-baptism-date',
+                type: 'GET',
+                data: { date: selectedDateStr },
+                success: function (response) {
+                    if (response.isFull) {
+                        $('#baptismDate').css('border-color', 'red').css('color', 'red');
+                        $('#dateError').text('This date is fully booked. Please select another date.');
+                        $('button[type="submit"]').prop('disabled', true);
+                    } else {
+                        $('#baptismDate').css('border-color', '').css('color', '');
+                        $('#dateError').text('');
+                        $('button[type="submit"]').prop('disabled', false);
+                    }
+                },
+                error: function (xhr) {
+                    console.error("Error checking date:", xhr);
+                }
+            });
+        });
+    });
+    </script>
+<script>
     function confirmcancel(id) {
         Swal.fire({
             title: 'Are you sure?',
@@ -343,6 +464,18 @@ function editFuneralRecord(record) {
             }
         });
     }
+</script>
+<script>
+    document.getElementById('categorySelect').addEventListener('change', function () {
+        const selectedOption = this.options[this.selectedIndex];
+        const price = selectedOption.getAttribute('data-price');
+
+        // Display price in <span>
+        document.getElementById('priceDisplay').textContent = '₱' + price;
+
+        // Set value in input field
+        document.getElementById('priceInput').value = price;
+    });
 </script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>

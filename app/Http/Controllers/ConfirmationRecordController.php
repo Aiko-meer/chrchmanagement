@@ -21,8 +21,14 @@ class ConfirmationRecordController extends Controller
 
         $confirmationYear = $ConfirmationFolder->year;
         $confirmationID = $ConfirmationFolder->id;
+        $recordsCount = ConfirmationRecord::count();
+        $recordsPerPage = 10;
+
+        // Auto-calculated page number (e.g. 21 records → page 3)
+        $pageNo = ceil(($recordsCount) / $recordsPerPage) + 1;
+
    
-        return view('record/confirmation_record', compact('confirmatioRecords', 'confirmation_id','ConfirmationFolder', 'confirmationYear', 'confirmationID'));
+        return view('record/confirmation_record', compact('confirmatioRecords', 'confirmation_id','ConfirmationFolder', 'confirmationYear', 'confirmationID', 'pageNo'));
     }
 
     public function showByFuneralArchived($confirmation_id)

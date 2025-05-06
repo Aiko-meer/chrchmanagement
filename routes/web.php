@@ -52,6 +52,9 @@ Route::get('/baptism_archive/{id}', [BaptismFolderController::class, 'archive'])
 Route::get('/baptism_archive/delete/{id}', [BaptismFolderController::class, 'destroy'])->name('baptism.destroy')->middleware('auth');
 Route::get('/baptism_retrieve/{year}', [BaptismFolderController::class, 'retrieve'])->name('baptism.retrieve')->middleware('auth');
 Route::get('/baptism_archive/month/{year}', [BaptismFolderController::class, 'month'])->name('baptism.archive.month')->middleware('auth');
+Route::get('/baptism_price', [BookRecordController::class, 'price'])->name('baptism.price')->middleware('auth');
+Route::put('/baptism_price/update', [BookRecordController::class, 'priceupdate'])->name('baptism.price.update')->middleware('auth');
+Route::get('/baptism_price/delete/{id}', [BookRecordController::class, 'pricedelete'])->name('baptism.price.delete')->middleware('auth');
 //book
 Route::get('/book/{baptism_id}', [BookFolderController::class, 'showByBaptism'])->name('book.showByBaptism')->middleware('auth');
 Route::get('/book_archived/{baptism_id}', [BookFolderController::class, 'showByBaptismArchived'])->name('book.showByBaptismArchived')->middleware('auth');
@@ -70,6 +73,7 @@ Route::get('/book_record_archived/{baptism_id}', [BookRecordController::class, '
 Route::get('/delete_record/{id}', [BookRecordController::class, 'destroy'])->name('book_record.destroy')->middleware('auth');
 Route::get('/checkbaptism/{id}', [BookRecordController::class, 'check'])->name('book_record.check')->middleware('auth');
 Route::post('/book_record/{baptism_id}', [BookRecordController::class, 'store'])->name('baptism.record.store')->middleware('auth');
+Route::post('/baptism/category', [BookRecordController::class, 'category'])->name('baptism.category.store')->middleware('auth');
 Route::get('/book-record/{id}', [BookRecordController::class, 'showInfo'])->name('book.record.info')->middleware('auth');
 Route::get('/bookrecord/archive/{id}', [BookRecordController::class, 'archive'])->name('bookrecord.archive')->middleware('auth');
 Route::get('/bookrecord_retrieve/{id}', [BookRecordController::class, 'retrieve'])->name('bookrecord.retrieve')->middleware('auth');
@@ -104,6 +108,12 @@ Route::get('/confirmation_certificate/{id}', [ConfirmationRecordController::clas
 Route::get('/confirmation_print/{id}', [ConfirmationRecordController::class, 'print'])->name('book_record.print')->middleware('auth');
 //wedding
 Route::post('/wedding-record', [WeddingFolderController::class, 'store'])->name('wedding.record.store')->middleware('auth');
+Route::post('/wedding/price', [WeddingFolderController::class, 'category'])->name('wedding.price.store')->middleware('auth');
+Route::get('/wedding/price/table', [WeddingFolderController::class, 'pricetable'])->name('wedding.price.index')->middleware('auth');
+Route::put('/wedding/price/table/update', [WeddingFolderController::class, 'priceupdate'])->name('wedding.price.update')->middleware('auth');
+Route::post('/wedding/payment', [WeddingFolderController::class, 'payment'])->name('wedding.payment.store')->middleware('auth');
+Route::put('/wedding/sunday', [WeddingFolderController::class, 'sunday'])->name('wedding.sunday.store')->middleware('auth');
+Route::put('/wedding/date', [WeddingFolderController::class, 'weddingupdate'])->name('wedding.date.update')->middleware('auth');
 Route::get('/wedding_record/{wedding_id}', [WeddingFolderController::class, 'showByWedding'])->name('wedding_record.showByWedding')->middleware('auth');
 Route::get('/wedding_record_archived/{wedding_id}', [WeddingFolderController::class, 'showByWeddingArchived'])->name('wedding_record.showByWeddingArchived')->middleware('auth');
 Route::get('/wedding', [WeddingFolderController::class, 'index'])->name('wedding.index')->middleware('auth');
@@ -137,7 +147,12 @@ Route::get('/funeral_record/status/{id}', [FuneralRecordController::class, 'stat
 Route::get('/funeral_record_archived/{funerals_id}', [FuneralRecordController::class, 'showByFuneralArchived'])->name('funeral_record.showByFuneralArchived')->middleware('auth');
 Route::get('/funeral_record_archived/retrieve/{id}', [FuneralRecordController::class, 'retrieve'])->name('funeral_record.retrieve')->middleware('auth');
 Route::post('/funeral-record', [FuneralRecordController::class, 'store'])->name('funeral.record.store')->middleware('auth');
-Route::put('/funeral-record/update', [FuneralRecordController::class, 'update'])->name('funeral.record.update')->middleware('auth');
+Route::post('/funeral-record/category', [FuneralRecordController::class, 'category'])->name('funeral.category.store')->middleware('auth');
+Route::post('/funeral-record/payment', [FuneralRecordController::class, 'payment'])->name('funeral.payment.store')->middleware('auth');
+Route::get('/funeral-price', [FuneralRecordController::class, 'price'])->name('price')->middleware('auth');
+Route::put('/funeral-price/update', [FuneralRecordController::class, 'priceupdate'])->name('funeral.price.update')->middleware('auth');
+Route::get('/funeral-price/delete/{id}', [FuneralRecordController::class, 'pricedelete'])->name('funeral.price.delete')->middleware('auth');
+Route::post('/funeral-record/update', [FuneralRecordController::class, 'update'])->name('funeral.record.update')->middleware('auth');
 Route::get('/funeral/{id}', [FuneralRecordController::class, 'showFuneralInfo'])->name('funeral.info')->middleware('auth');
 Route::get('/funeralrecord/archive/{id}', [FuneralRecordController::class, 'archive'])->name('funeralrecord.archive')->middleware('auth');
 //members

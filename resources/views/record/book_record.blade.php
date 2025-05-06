@@ -426,7 +426,7 @@
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="pageNo">Page No.</label>
-                                        <input type="text" class="form-control" id="pageNo" name="pageNo" placeholder="Enter Page No." required>
+                                        <input type="text" class="form-control" id="pageNo" name="pageNo" value="{{$pageNo}}" readonl>
                                     </div>
                                 </div>
                                 
@@ -434,7 +434,7 @@
     <div class="form-group">
         <label for="baptismDate">Date of Baptism</label>
         <input type="date" class="form-control" id="baptismDate" name="baptismDate" required>
-        <small id="dateError" class="text-danger"></small> <!-- Error Message -->
+        <small id="dateError" class="text-danger"></small>
     </div>
 </div>
                             </div>
@@ -617,17 +617,30 @@
                                         </select>
                                     </div>
                                 </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <input type="text" id="priceInput" name="price" class="form-control" hidden>
+
+                                        <label for="residenceCity">Type of Baptism</label>
+                                        <select class="form-control" id="categorySelect" name="category">  
+                                                <option value="" disabled selected>Select a category</option>
+                                                @foreach ($category as $cat)
+                                                    <option value="{{ $cat->name }}" data-price="{{ $cat->price }}">
+                                                        {{ $cat->name }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                            
+                                            <p>Price: <span id="priceDisplay">₱</span></p>
+                                            
+                                    </div>
+                                </div>
                             </div>
 
                             <!-- Godparent Information (Dynamic Fields) -->
                             <h5 class="fw-bold mb-3">Godparent Information</h5>
                             <div id="godparents-container">
-                            
-                           
-                                
-                          
-                              
-
                           </div>
                           <button type="button" id="add-godparent-btn" class="btn btn-primary">Add Godparent</button>
                           <div class="card-action">
@@ -648,6 +661,50 @@
         </div>
       </div>
       </div>
+     
+      <!--category model-->
+      <div class="modal fade" id="CategoryModal" tabindex="-1" aria-labelledby="CategoryModalLabel" aria-hidden="true">
+        <div class="modal-dialog ">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="formModalLabel">New Baptism Category Price</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <form id="baptismRecordForm" action="{{ route('baptism.category.store') }}" method="POST">
+                @csrf
+                <div class="container">
+                  <div class="page-inner">
+                    <div class="row">
+                      <div class="col-md-12">
+                        <div class="card">
+                          <div class="card-body">
+                            <!-- Example Form Fields -->
+                            <div class="form-group mb-3">
+                              <label for="baptism_name">Name of Category</label>
+                              <input type="text" name="baptism_name" class="form-control" required>
+                            </div>
+      
+                            <div class="form-group mb-3">
+                              <label for="baptism_date">Price</label>
+                              <input type="text" name="baptism_price" class="form-control" required>
+                            </div>
+                          </div> <!-- End card-body -->
+                        </div> <!-- End card -->
+                      </div> <!-- End col -->
+                    </div> <!-- End row -->
+                  </div> <!-- End page-inner -->
+                </div> <!-- End container -->
+      
+                <div class="modal-footer">
+                  <button type="submit" class="btn btn-primary">Save</button>
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                </div>
+              </form>
+            </div> <!-- End modal-body -->
+          </div> <!-- End modal-content -->
+        </div> <!-- End modal-dialog -->
+      </div> <!-- End modal -->
       
     
 
@@ -664,6 +721,19 @@
                                 <i class="fa fa-plus"></i>
                                 New Baptism
                                 </button>
+                                <button
+                                class="btn btn-primary btn-round ms-2"
+                                data-bs-toggle="modal" data-bs-target="#CategoryModal"
+                                >
+                                <i class="fa fa-plus"></i>
+                                New Category price
+                                </button>
+                                <a
+                                class="btn btn-primary btn-round ms-2"
+                                href="/baptism_price">
+                                <i class="fa fa-table"></i>
+                                Category Price Table
+                                </a>
                             </div>
                         </div>
                         <div class="card-body">
@@ -702,10 +772,6 @@
                                           <a href="{{ route('book.record.info', $record->id) }}" type="button" data-bs-toggle="tooltip" title="View Baptism Record" class="btn btn-link btn-primary btn-lg">
                                             <i class="fas fa-eye"></i>
                                         </a>
-                                        <button type="button" data-bs-toggle="tooltip" title="Edit Baptism Record" class="btn btn-link btn-primary btn-lg"
-                                        onclick="editBaptismRecord({{ json_encode($record) }})">
-                                        <i class="fa fa-edit"></i>
-                                        </button>
                                         <button type="button" data-bs-toggle="tooltip" class="btn btn-link btn-danger btn-lg" title="Cancel"
                                         onclick="confirmcancel({{ $record['id'] }})">
                                         <i class="fas fa-times"></i>  <!-- Checkmark icon -->
@@ -945,32 +1011,50 @@
 </div>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-$(document).ready(function() {
-    $('#baptismDate').on('change', function() {
-        let selectedDate = $(this).val();
-        
-        if (!selectedDate) return; // Stop if no date selected
-
-        $.ajax({
-            url: '/check-baptism-date', // Laravel route to check the date
-            type: 'GET',
-            data: { date: selectedDate },
-            success: function(response) {
-                if (response.isFull) {
-                    $('#baptismDate').css('border-color', 'red').css('color', 'red');
-                    $('#dateError').text('This date is fully booked. Please select another date.');
-                } else {
-                    $('#baptismDate').css('border-color', '').css('color', '');
-                    $('#dateError').text('');
-                }
-            },
-            error: function(xhr) {
-                console.error("Error checking date:", xhr);
-            }
-        });
-    });
-});
-</script>
+  $(document).ready(function () {
+      $('#baptismDate').on('change', function () {
+          const selectedDateStr = $(this).val();
+          const selectedDate = new Date(selectedDateStr);
+  
+          // Reset UI
+          $('#baptismDate').css('border-color', '').css('color', '');
+          $('#dateError').text('');
+          $('button[type="submit"]').prop('disabled', false);
+  
+          if (!selectedDateStr) return;
+  
+          // 1. Check if it's Sunday
+          if (selectedDate.getDay() === 0) {
+              $('#baptismDate').css('border-color', 'red').css('color', 'red');
+              $('#dateError').text('Booking on Sundays is not allowed.');
+              $('button[type="submit"]').prop('disabled', true);
+              return; // Don't proceed with AJAX if Sunday
+          }
+  
+          // 2. AJAX check for fully booked date
+          $.ajax({
+              url: '/check-baptism-date',
+              type: 'GET',
+              data: { date: selectedDateStr },
+              success: function (response) {
+                  if (response.isFull) {
+                      $('#baptismDate').css('border-color', 'red').css('color', 'red');
+                      $('#dateError').text('This date is fully booked. Please select another date.');
+                      $('button[type="submit"]').prop('disabled', true);
+                  } else {
+                      $('#baptismDate').css('border-color', '').css('color', '');
+                      $('#dateError').text('');
+                      $('button[type="submit"]').prop('disabled', false);
+                  }
+              },
+              error: function (xhr) {
+                  console.error("Error checking date:", xhr);
+              }
+          });
+      });
+  });
+  </script>
+  
 <script>
     function confirmcancel(id) {
         Swal.fire({
@@ -1005,6 +1089,21 @@ $(document).ready(function() {
         });
     }
 </script>
+<script>
+    document.getElementById('categorySelect').addEventListener('change', function () {
+        const selectedOption = this.options[this.selectedIndex];
+        const price = selectedOption.getAttribute('data-price');
+
+        // Display price in <span>
+        document.getElementById('priceDisplay').textContent = '₱' + price;
+
+        // Set value in input field
+        document.getElementById('priceInput').value = price;
+    });
+</script>
+
+  
+
 
 @include('layouts.footer')
 

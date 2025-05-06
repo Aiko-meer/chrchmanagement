@@ -42,6 +42,9 @@ return new class extends Migration
             $table->string('residence_city');    // Residence Municipality/City
             $table->timestamps();
             $table->tinyInteger('status')->nullable();
+            $table->string('category');
+            $table->string('price');
+            $table->tinyInteger('payment');
         });
     }
 

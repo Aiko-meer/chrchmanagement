@@ -40,6 +40,9 @@ return new class extends Migration
             $table->string('godparent_last_name');
             $table->timestamps();
             $table->tinyInteger('status')->nullable();
+            $table->int('payment');
+            $table->string('category');
+            $table->string('price');
  
         });
     }

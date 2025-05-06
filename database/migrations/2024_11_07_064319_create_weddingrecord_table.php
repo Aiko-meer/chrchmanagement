@@ -37,6 +37,18 @@ return new class extends Migration
             $table->string('bride_residence_city');
             $table->string('bride_contact');
             $table->string('document')->nullable();
+            $table->string('groom_baptism_cert')->nullable();
+            $table->string('groom_confirmation_cert')->nullable();
+            $table->string('groom_cenomar')->nullable();
+            $table->string('brides_baptism_cert')->nullable();
+            $table->string('brides_confirmation_cert')->nullable();
+            $table->string('brides_cenomar')->nullable();
+            $table->string('category');
+            $table->string('price');
+            $table->string('payment');
+            $table->string('sundayone')->nullable();
+            $table->string('sundaytwo')->nullable();
+            $table->string('sundaythree')->nullable();
             $table->timestamps();
             $table->tinyInteger('status')->nullable();
         });

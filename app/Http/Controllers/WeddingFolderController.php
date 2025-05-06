@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 use App\Models\WeddingFolder;
 use App\Models\WeddingRecord;
+use App\Models\Weddingprice;
 use App\Models\ConfirmationFolder;
 use App\Models\ConfirmationRecord;
 use App\Models\Baptism_folder;
@@ -65,11 +66,11 @@ class WeddingFolderController extends Controller
         
 
         $WeddingFolder = WeddingFolder::where('id', $wedding_id)->firstOrFail();
-
+        $category = Weddingprice::all();
         $weddingYear = $WeddingFolder->year;
         $weddingID = $WeddingFolder->id;
    
-        return view('record/wedding_record', compact('WeddingRecords', 'wedding_id','WeddingFolder', 'weddingYear', 'weddingID'));
+        return view('record/wedding_record', compact('WeddingRecords', 'wedding_id','WeddingFolder', 'weddingYear', 'weddingID','category'));
     }
     public function showByWeddingArchived($wedding_id)
     {
@@ -91,7 +92,6 @@ class WeddingFolderController extends Controller
         // Validate the form data
         $request->validate([
             'wedding_id' => 'required|string|max:255',
-       
             'wedding_date' => 'required|date',
             'groom_first_name' => 'required|string|max:255',
             'groom_middle_name' => 'nullable|string|max:255',
@@ -113,15 +113,45 @@ class WeddingFolderController extends Controller
             'bride_residence_province' => 'nullable|string|max:255',
             'bride_residence_city' => 'nullable|string|max:255',
             'bride_contact' => 'nullable|string|max:255',
-            'document' => 'nullable|file|mimes:pdf,doc,docx,jpg,png|max:2048',
+            'groombapcer' => 'nullable|file|mimes:pdf,doc,docx,jpg,png|max:2048',
+            'groomconfir' => 'nullable|file|mimes:pdf,doc,docx,jpg,png|max:2048',
+            'groomcenomar' => 'nullable|file|mimes:pdf,doc,docx,jpg,png|max:2048',
+            'bridesbapcer' => 'nullable|file|mimes:pdf,doc,docx,jpg,png|max:2048',
+            'bridesconfir' => 'nullable|file|mimes:pdf,doc,docx,jpg,png|max:2048',
+            'bridescenomar' => 'nullable|file|mimes:pdf,doc,docx,jpg,png|max:2048',
+            'category' => 'required',
+            'price' => 'required',
             'status'=> 'nullable',
         ]);
 
         // Handle file upload if a document is provided
-        $documentPath = null;
-        if ($request->hasFile('document')) {
-            $documentPath = $request->file('document')->store('documents', 'public');
-        }
+      
+        $documentPath = $bapPath = $confPath = $cenomarPath = null;
+$bridebapPath = $bridedconfPath = $bridecenomarPath = null;
+
+if ($request->hasFile('document')) {
+    $documentPath = $request->file('document')->store('documents', 'public');
+}
+if ($request->hasFile('groombapcer')) {
+    $bapPath = $request->file('groombapcer')->store('documents', 'public');
+}
+if ($request->hasFile('groomconfir')) {
+    $confPath = $request->file('groomconfir')->store('documents', 'public');
+}
+if ($request->hasFile('groomcenomar')) {
+    $cenomarPath = $request->file('groomcenomar')->store('documents', 'public');
+}
+if ($request->hasFile('bridesbapcer')) {
+    $bridebapPath = $request->file('bridesbapcer')->store('documents', 'public');
+}
+if ($request->hasFile('bridesconfir')) {
+    $brideconfPath = $request->file('bridesconfir')->store('documents', 'public');
+}
+if ($request->hasFile('bridescenomar')) {
+    $bridecenomarPath = $request->file('bridescenomar')->store('documents', 'public');
+}
+
+
 
         $weddingYear = $request->weddingYear;
         $weddingID = $request->wedding_id;
@@ -168,12 +198,58 @@ class WeddingFolderController extends Controller
             'bride_residence_province' => $request->bride_residence_province,
             'bride_residence_city' => $request->bride_residence_city,
             'bride_contact' => $request->bride_contact,
-            'document' => $documentPath,
-            'status' => $request->status,        ]);
+            'groom_baptism_cert' => $bapPath,
+            'groom_confirmation_cert' => $confPath,
+            'groom_cenomar' => $cenomarPath,
+            'brides_baptism_cert' => $bridebapPath,
+            'brides_confirmation_cert' => $brideconfPath,
+            'brides_cenomar' => $bridecenomarPath,
+            'category' => $request->category,
+            'price' => $request->price,
+            'status' => $request->status,
+            'payment' => 0,
+            'sundayone' => 0,
+            'sundaytwo' => 0,
+            'sundaythree' => 0,
+        ]);
 
         // Redirect or respond back with a success message
         return back()->with('success', 'Wedding record has been added successfully.');
     }
+
+    public function payment(Request $request){
+        $request->validate([
+            'first_name' => 'required|string|max:255',
+            'middle_name' => 'nullable|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'reason' => 'required|string|max:255',
+            'amount' => 'required',
+            'payment_date' => 'required|date',
+            'payment_time' => 'required',
+            'funeral_id' => 'required'
+        ]);
+
+            Payment::create([
+            'first_name' => $request->first_name,
+            'middle_name' => $request->middle_name,
+            'last_name' => $request->last_name,
+            'reason' => $request->reason,
+            'amount' => $request->amount,
+            'payment_date' => $request->payment_date,
+            'payment_time' => $request->payment_time,
+        ]);
+
+        $funeralRecord = WeddingRecord::findOrFail($request->funeral_id);
+        $funeralRecord->update([
+            'payment' => 1,
+        ]);
+
+        // Redirect back with a success message
+        return redirect()->back()->with('success', 'Funeral record updated successfully.');
+
+        
+    }
+
     public function archive($id)
 {
     // Find the wedding folder record by ID
@@ -527,6 +603,81 @@ public function checkwedding(Request $request)
     $record->delete(); // Permanently delete the record
 
     return redirect()->back()->with('success', 'Record successfully deleted.');
+}
+
+public function category( Request $request)
+{
+    $validated = $request->validate([
+        'baptism_name' => 'required',
+        'baptism_price' => 'required',
+    ]);
+
+    Weddingprice::create([
+        'name' => $validated['baptism_name'],
+        'price' => $validated['baptism_price'], 
+    ]);
+    
+    return redirect()->back()->with('success', 'Category Added');
+}
+
+public function priceupdate(Request $request)
+{
+    $request->validate([
+        'price_id' => 'required',
+        'name' => 'required',
+        'price' => 'required',
+    ]);
+    $funeralprice = Weddingprice::findOrFail($request->price_id);
+        $funeralprice->update([
+            'name' => $request->name,
+            'price' => $request->price, 
+        ]);
+    
+    return redirect()->back()->with('success', 'Category updated');
+}
+
+public function sunday (Request $request)
+{
+    $updateData = [];
+
+    if ($request->has('sundayone')) {
+        $updateData['sundayone'] = 1;
+    }
+
+    if ($request->has('sundaytwo')) {
+        $updateData['sundaytwo'] = 1;
+    }
+
+    if ($request->has('sundaythree')) {
+        $updateData['sundaythree'] = 1;
+    }
+
+    if (!empty($updateData)) {
+        WeddingRecord::where('id', $request->input('wedding_id'))->update($updateData);
+    }
+    
+  
+    return redirect()->back()->with('success', 'Wedding Updated');
+}
+
+public function weddingupdate(Request $request)
+{
+    $request->validate([
+        'wedding_id' => 'required',
+        'wedding_date' => 'required',
+    ]);
+
+    $weddingrecord = WeddingRecord::find($request->wedding_id);
+    $weddingrecord->update([
+        'wedding_date' => $request->wedding_date,
+    ]);
+    return redirect()->back()->with('success', 'Wedding Updated');
+}
+
+public function pricetable()
+{
+    $price = Weddingprice::all();
+     return view('table/wedding_price', compact('price'));
 }
     
 }

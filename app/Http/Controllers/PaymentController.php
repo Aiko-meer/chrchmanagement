@@ -44,7 +44,7 @@ class PaymentController extends Controller
             'middle_name' => 'nullable|string|max:255',
             'last_name' => 'required|string|max:255',
             'reason' => 'required|string|max:255',
-            'amount' => 'required|numeric|min:0',
+            'amount' => 'required',
             'payment_date' => 'required|date',
             'payment_time' => 'required',
         ]);

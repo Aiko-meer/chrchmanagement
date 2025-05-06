@@ -36,7 +36,18 @@ class WeddingRecord extends Model
         'bride_residence_province',
         'bride_residence_city',
         'bride_contact',
-        'document',
+        'groom_baptism_cert' ,
+        'groom_confirmation_cert' ,
+        'groom_cenomar' ,
+        'brides_baptism_cert' ,
+        'brides_confirmation_cert' ,
+        'brides_cenomar' ,
+        'category',
+        'price',
+        'payment',
+        'sundayone',
+        'sundaytwo',
+        'sundaythree',
        
         
     ];

@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Funeral_folder;
 use App\Models\FuneralRecord;
+use App\Models\Funeralprice;
 use Illuminate\Support\Carbon;  
+use App\Models\Payment;
 class FuneralRecordController extends Controller
 {
     public function showByFuneral($funerals_id)
@@ -17,11 +19,43 @@ class FuneralRecordController extends Controller
         
 
         $FuneraFolder = Funeral_folder::where('id', $funerals_id)->firstOrFail();
-
+        $price = Funeralprice::all();
         $funeralYear = $FuneraFolder->year;
         $funeralID = $FuneraFolder->id;
    
-        return view('record/funeral_record', compact('funeralRecords', 'funerals_id','FuneraFolder', 'funeralYear', 'funeralID'));
+        return view('record/funeral_record', compact('funeralRecords', 'funerals_id','FuneraFolder', 'funeralYear', 'funeralID', 'price'));
+    }
+    public function payment(Request $request){
+        $request->validate([
+            'first_name' => 'required|string|max:255',
+            'middle_name' => 'nullable|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'reason' => 'required|string|max:255',
+            'amount' => 'required',
+            'payment_date' => 'required|date',
+            'payment_time' => 'required',
+            'funeral_id' => 'required'
+        ]);
+
+            Payment::create([
+            'first_name' => $request->first_name,
+            'middle_name' => $request->middle_name,
+            'last_name' => $request->last_name,
+            'reason' => $request->reason,
+            'amount' => $request->amount,
+            'payment_date' => $request->payment_date,
+            'payment_time' => $request->payment_time,
+        ]);
+
+        $funeralRecord = FuneralRecord::findOrFail($request->funeral_id);
+        $funeralRecord->update([
+            'payment' => 1,
+        ]);
+
+        // Redirect back with a success message
+        return redirect()->back()->with('success', 'Funeral record updated successfully.');
+
+        
     }
 
     public function showByFuneralArchived($funerals_id)
@@ -53,6 +87,8 @@ class FuneralRecordController extends Controller
             'dod' => 'required|date',
             'contact' => 'nullable|string|max:20',
             'status' => "nullable",
+            'price' =>'required',
+            'category' => 'required',
         ]);
 
         
@@ -89,6 +125,9 @@ class FuneralRecordController extends Controller
             'dod' => $request->dod,
             'contact' => $request->contact,
             'status' => $request->status,
+            'category' => $request->category,
+            'price' => $request->price,
+            'payment' => 0,
         ]);
 
         // Redirect with success message
@@ -182,4 +221,52 @@ public function checkfuneral(Request $request)
             'isFull' => $existingConfirmations >= $MAX_CONFIRMATIONS_PER_DAY
         ]);
     }
+
+    public function category( Request $request)
+{
+    $validated = $request->validate([
+        'baptism_name' => 'required',
+        'baptism_price' => 'required',
+    ]);
+
+    Funeralprice::create([
+        'name' => $validated['baptism_name'],
+        'price' => $validated['baptism_price'], 
+    ]);
+    
+    return redirect()->back()->with('success', 'Category Added');
+}
+
+public function price(){
+    
+    $price = Funeralprice::all();
+   
+
+    return view('table/funeral_price', compact('price'));
+    
+}
+
+public function priceupdate(Request $request)
+{
+    $request->validate([
+        'price_id' => 'required',
+        'name' => 'required',
+        'price' => 'required',
+    ]);
+    $funeralprice = Funeralprice::findOrFail($request->price_id);
+        $funeralprice->update([
+            'name' => $request->name,
+            'price' => $request->price, 
+        ]);
+    
+    return redirect()->back()->with('success', 'Category updated');
+}
+
+public function pricedelete($id)
+{
+    $record = Funeralprice::findOrFail($id); // Replace `BookRecord` with your actual model
+    $record->delete(); // Permanently delete the record
+
+    return redirect()->back()->with('success', 'Price successfully deleted.');
+}
 }

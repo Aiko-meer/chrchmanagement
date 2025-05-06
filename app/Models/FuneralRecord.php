@@ -23,6 +23,16 @@ class FuneralRecord extends Model
         'contact',
         'archive',
         'status',
+        'payment',
+        'groombapcer' ,
+        'groomconfir' ,
+        'groomcenomar' ,
+        'document' ,
+        'bridesbapcer' ,
+        'bridesconfir' ,
+        'bridescenomar' ,
+        'category',
+        'price',
         
     ];
 }
