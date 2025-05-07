@@ -197,7 +197,8 @@
                             {{ $payment->first_name }} {{ $payment->middle_name }} {{ $payment->last_name }}
                         </th>
                         <td class="text-end">{{ \Carbon\Carbon::parse($payment->payment_date)->format('F j, Y') }}, {{ \Carbon\Carbon::parse($payment->payment_time)->format('g:i A') }}</td>
-                        <td class="text-end">₱ {{number_format($payment->amount, 2) }}</td>
+                        <td class="text-end">₱ {{ number_format((float) $payment->amount, 2) }}</td>
+
                         
                         </tr>
                         @endforeach
